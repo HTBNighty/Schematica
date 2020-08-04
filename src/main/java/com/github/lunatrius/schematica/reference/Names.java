@@ -30,8 +30,8 @@ public final class Names {
         public static final String RENDER_DISTANCE = "renderDistance";
         public static final String RENDER_DISTANCE_DESC = "Schematic render distance.";
 
-        public static final String PLACE_DELAY = "placeDelay";
-        public static final String PLACE_DELAY_DESC = "Delay between placement attempts (in ticks).";
+        public static final String PLACE_SPEED = "placeSpeed";
+        public static final String PLACE_SPEED_DESC = "How fast to place blocks (in bps).";
         public static final String TIMEOUT = "timeout";
         public static final String TIMEOUT_DESC = "Timeout before re-trying failed blocks.";
         public static final String PLACE_DISTANCE = "placeDistance";

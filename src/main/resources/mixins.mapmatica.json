@@ -1,0 +1,9 @@
+{
+  "required": true,
+  "compatibilityLevel": "JAVA_8",
+  "package": "com.github.lunatrius.schematica.mixin.mixins",
+  "refmap": "mixins.mapmatica.refmap.json",
+  "mixins": [
+    "MixinEntityPlayerSP"
+  ]
+}

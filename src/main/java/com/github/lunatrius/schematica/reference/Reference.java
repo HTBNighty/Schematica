@@ -4,8 +4,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class Reference {
-    public static final String MODID = "schematica";
-    public static final String NAME = "Schematica";
+    public static final String MODID = "mapmatica";
+    public static final String NAME = "Mapmatica";
     public static final String VERSION = "${version}";
     public static final String FORGE = "${forgeversion}";
     public static final String MINECRAFT = "${mcversion}";

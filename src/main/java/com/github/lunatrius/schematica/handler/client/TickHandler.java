@@ -18,7 +18,7 @@ public class TickHandler {
 
     private final Minecraft minecraft = Minecraft.getMinecraft();
 
-    private int ticks = -1;
+    private long lastPlaceTime = 0;
 
     private TickHandler() {}
 
@@ -42,28 +42,35 @@ public class TickHandler {
             return;
         }
 
-        this.minecraft.mcProfiler.startSection("schematica");
+        if (ClientProxy.isPendingReset) {
+            Schematica.proxy.resetSettings();
+            ClientProxy.isPendingReset = false;
+            Reference.logger.info("Client settings have been reset.");
+        }
+    }
+
+    /** Called from {@link com.github.lunatrius.schematica.mixin.mixins.MixinEntityPlayerSP} */
+    // TODO: Get an actual event system working
+    public void onUpdateWalkingPlayer () {
+        final SchematicPrinter printer = SchematicPrinter.INSTANCE;
+        if (minecraft.isGamePaused() || !printer.isEnabled() || !printer.isPrinting()) {
+            return;
+        }
+
         final WorldClient world = this.minecraft.world;
         final EntityPlayerSP player = this.minecraft.player;
         final SchematicWorld schematic = ClientProxy.schematic;
         if (world != null && player != null && schematic != null && schematic.isRendering) {
             this.minecraft.mcProfiler.startSection("printer");
-            final SchematicPrinter printer = SchematicPrinter.INSTANCE;
-            if (printer.isEnabled() && printer.isPrinting() && this.ticks-- < 0) {
-                this.ticks = ConfigurationHandler.placeDelay;
+
+            // Make sure the time passed since the last place is greater than 1 second divided by the blocks placed per second
+            if (System.nanoTime() - lastPlaceTime >= 1000000000L / ConfigurationHandler.placeSpeed) {
+                this.lastPlaceTime = System.nanoTime();
 
                 printer.print(world, player);
             }
 
             this.minecraft.mcProfiler.endSection();
         }
-
-        if (ClientProxy.isPendingReset) {
-            Schematica.proxy.resetSettings();
-            ClientProxy.isPendingReset = false;
-            Reference.logger.info("Client settings have been reset.");
-        }
-
-        this.minecraft.mcProfiler.endSection();
     }
 }

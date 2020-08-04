@@ -2,13 +2,14 @@
 	"modListVersion": 2,
 	"modList": [
 		{
-			"modid": "schematica",
-			"name": "Schematica",
-			"description": "Import and export Minecraft schematic files in Minecraft!",
+			"modid": "mapmatica",
+			"name": "Mapmatica",
+			"description": "A fork of Schematica made specifically to help build maps",
 			"mcversion": "${mcversion}",
 			"version": "${version}",
 			"authorList": [
-				"Lunatrius"
+				"Lunatrius",
+				"Old Chum"
 			],
 			"credits": "AbrarSyed, AtomicBlom, UltraMoogleMan",
 			"dependants": [  ],

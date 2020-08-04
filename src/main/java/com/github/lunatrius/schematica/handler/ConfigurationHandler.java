@@ -34,7 +34,7 @@ public class ConfigurationHandler {
     public static final boolean HIGHLIGHT_AIR_DEFAULT = true;
     public static final double BLOCK_DELTA_DEFAULT = 0.005;
     public static final int RENDER_DISTANCE_DEFAULT = 8;
-    public static final int PLACE_DELAY_DEFAULT = 1;
+    public static final int PLACE_SPEED_DEFAULT = 20;
     public static final int TIMEOUT_DEFAULT = 10;
     public static final int PLACE_DISTANCE_DEFAULT = 5;
     public static final boolean PLACE_INSTANTLY_DEFAULT = false;
@@ -61,7 +61,7 @@ public class ConfigurationHandler {
     public static boolean highlightAir = HIGHLIGHT_AIR_DEFAULT;
     public static double blockDelta = BLOCK_DELTA_DEFAULT;
     public static int renderDistance = RENDER_DISTANCE_DEFAULT;
-    public static int placeDelay = PLACE_DELAY_DEFAULT;
+    public static int placeSpeed = PLACE_SPEED_DEFAULT;
     public static int timeout = TIMEOUT_DEFAULT;
     public static int placeDistance = PLACE_DISTANCE_DEFAULT;
     public static boolean placeInstantly = PLACE_INSTANTLY_DEFAULT;
@@ -86,7 +86,7 @@ public class ConfigurationHandler {
     public static Property propHighlightAir = null;
     public static Property propBlockDelta = null;
     public static Property propRenderDistance = null;
-    public static Property propPlaceDelay = null;
+    public static Property propPlaceSpeed = null;
     public static Property propTimeout = null;
     public static Property propPlaceDistance = null;
     public static Property propPlaceInstantly = null;
@@ -164,9 +164,9 @@ public class ConfigurationHandler {
     }
 
     private static void loadConfigurationPrinter() {
-        propPlaceDelay = configuration.get(Names.Config.Category.PRINTER, Names.Config.PLACE_DELAY, PLACE_DELAY_DEFAULT, Names.Config.PLACE_DELAY_DESC, 0, 20);
-        propPlaceDelay.setLanguageKey(Names.Config.LANG_PREFIX + "." + Names.Config.PLACE_DELAY);
-        placeDelay = propPlaceDelay.getInt(PLACE_DELAY_DEFAULT);
+        propPlaceSpeed = configuration.get(Names.Config.Category.PRINTER, Names.Config.PLACE_SPEED, PLACE_SPEED_DEFAULT, Names.Config.PLACE_SPEED_DESC, 0, 100);
+        propPlaceSpeed.setLanguageKey(Names.Config.LANG_PREFIX + "." + Names.Config.PLACE_SPEED);
+        placeSpeed = propPlaceSpeed.getInt(PLACE_SPEED_DEFAULT);
 
         propTimeout = configuration.get(Names.Config.Category.PRINTER, Names.Config.TIMEOUT, TIMEOUT_DEFAULT, Names.Config.TIMEOUT_DESC, 0, 100);
         propTimeout.setLanguageKey(Names.Config.LANG_PREFIX + "." + Names.Config.TIMEOUT);

@@ -14,6 +14,7 @@ import com.github.lunatrius.schematica.proxy.ClientProxy;
 import com.github.lunatrius.schematica.reference.Constants;
 import com.github.lunatrius.schematica.reference.Reference;
 import com.google.common.collect.AbstractIterator;
+import com.google.common.collect.Lists;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -130,7 +131,14 @@ public class SchematicPrinter {
 
         final double blockReachDistance = this.minecraft.playerController.getBlockReachDistance() - 0.1;
         final double blockReachDistanceSq = blockReachDistance * blockReachDistance;
-        for (final MBlockPos pos : BlockPosHelper.getAllInBoxXZY(minX, minY, minZ, maxX, maxY, maxZ)) {
+
+        List<MBlockPos> blocks = new ArrayList<>();
+        for (BlockPos pos : BlockPos.getAllInBox(minX, minY, minZ, maxX, maxY, maxZ)) {
+            blocks.add(new MBlockPos(pos));
+        }
+        Collections.sort(blocks, (o1, o2) -> (int) (o1.distanceSqToCenter(dX, dY, dZ) - o2.distanceSqToCenter(dX, dY, dZ)));
+
+        for (MBlockPos pos : blocks)  {
             if (pos.distanceSqToCenter(dX, dY, dZ) > blockReachDistanceSq) {
                 continue;
             }

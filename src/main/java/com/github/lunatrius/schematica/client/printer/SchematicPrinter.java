@@ -1,6 +1,5 @@
 package com.github.lunatrius.schematica.client.printer;
 
-import com.github.lunatrius.core.util.math.BlockPosHelper;
 import com.github.lunatrius.core.util.math.MBlockPos;
 import com.github.lunatrius.schematica.block.state.BlockStateHelper;
 import com.github.lunatrius.schematica.client.printer.nbtsync.NBTSync;
@@ -13,8 +12,6 @@ import com.github.lunatrius.schematica.handler.ConfigurationHandler;
 import com.github.lunatrius.schematica.proxy.ClientProxy;
 import com.github.lunatrius.schematica.reference.Constants;
 import com.github.lunatrius.schematica.reference.Reference;
-import com.google.common.collect.AbstractIterator;
-import com.google.common.collect.Lists;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -43,6 +40,8 @@ public class SchematicPrinter {
 
     private boolean isEnabled = true;
     private boolean isPrinting = false;
+
+    private long lastSwapTime = 0;
 
     private SchematicWorld schematic = null;
     private byte[][][] timeout = null;
@@ -324,7 +323,12 @@ public class SchematicPrinter {
             return false;
         }
 
-        return placeBlock(world, player, pos, direction, offsetX, offsetY, offsetZ, extraClicks);
+        if (((System.nanoTime() - lastSwapTime) / 1000000L) < ConfigurationHandler.swapDelay) {
+            return false;
+        } else {
+            return placeBlock(world, player, pos, direction, offsetX, offsetY, offsetZ, extraClicks);
+        }
+
     }
 
     private boolean placeBlock(final WorldClient world, final EntityPlayerSP player, final BlockPos pos, final EnumFacing direction, final float offsetX, final float offsetY, final float offsetZ, final int extraClicks) {
@@ -429,6 +433,7 @@ public class SchematicPrinter {
     }
 
     private boolean swapSlots(final int from, final int to) {
+        this.lastSwapTime = System.nanoTime();
         return this.minecraft.playerController.windowClick(this.minecraft.player.inventoryContainer.windowId, from, to, ClickType.SWAP, this.minecraft.player) == ItemStack.EMPTY;
     }
 }

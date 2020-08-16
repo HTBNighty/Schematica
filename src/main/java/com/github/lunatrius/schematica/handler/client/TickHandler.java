@@ -12,6 +12,7 @@ import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent;
+import org.lwjgl.Sys;
 
 public class TickHandler {
     public static final TickHandler INSTANCE = new TickHandler();
@@ -19,6 +20,7 @@ public class TickHandler {
     private final Minecraft minecraft = Minecraft.getMinecraft();
 
     private long lastPlaceTime = 0;
+    private long lastBreakTime = 0;
 
     private TickHandler() {}
 
@@ -53,7 +55,9 @@ public class TickHandler {
     // TODO: Get an actual event system working
     public void onUpdateWalkingPlayer () {
         final SchematicPrinter printer = SchematicPrinter.INSTANCE;
-        if (minecraft.isGamePaused() || !printer.isEnabled() || !printer.isPrinting()) {
+
+        if (minecraft.isGamePaused() || !printer.isEnabled() || !printer.isPrinting()
+        || ((System.nanoTime() - lastBreakTime) / 1000000L) < ConfigurationHandler.breakPause) {
             return;
         }
 
@@ -72,5 +76,10 @@ public class TickHandler {
 
             this.minecraft.mcProfiler.endSection();
         }
+    }
+
+    // TODO: Get an actual event system working
+    public void onBreakBlock () {
+        lastBreakTime = System.nanoTime();
     }
 }

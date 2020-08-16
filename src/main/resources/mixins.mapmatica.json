@@ -4,6 +4,7 @@
   "package": "com.github.lunatrius.schematica.mixin.mixins",
   "refmap": "mixins.mapmatica.refmap.json",
   "mixins": [
-    "MixinEntityPlayerSP"
+    "MixinEntityPlayerSP",
+    "MixinBlock"
   ]
 }

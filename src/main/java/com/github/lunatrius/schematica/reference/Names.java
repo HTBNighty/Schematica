@@ -32,6 +32,8 @@ public final class Names {
 
         public static final String PLACE_SPEED = "placeSpeed";
         public static final String PLACE_SPEED_DESC = "How fast to place blocks (in bps).";
+        public static final String BREAK_PAUSE = "breakPause";
+        public static final String BREAK_PAUSE_DESC = "How long in ms printer should stop for after breaking a block";
         public static final String TIMEOUT = "timeout";
         public static final String TIMEOUT_DESC = "Timeout before re-trying failed blocks.";
         public static final String PLACE_DISTANCE = "placeDistance";

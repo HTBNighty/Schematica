@@ -35,6 +35,7 @@ public class ConfigurationHandler {
     public static final double BLOCK_DELTA_DEFAULT = 0.005;
     public static final int RENDER_DISTANCE_DEFAULT = 8;
     public static final int PLACE_SPEED_DEFAULT = 20;
+    public static final int BREAK_PAUSE_DEFAULT = 5;
     public static final int TIMEOUT_DEFAULT = 10;
     public static final int PLACE_DISTANCE_DEFAULT = 5;
     public static final boolean PLACE_INSTANTLY_DEFAULT = false;
@@ -62,6 +63,7 @@ public class ConfigurationHandler {
     public static double blockDelta = BLOCK_DELTA_DEFAULT;
     public static int renderDistance = RENDER_DISTANCE_DEFAULT;
     public static int placeSpeed = PLACE_SPEED_DEFAULT;
+    public static int breakPause = BREAK_PAUSE_DEFAULT;
     public static int timeout = TIMEOUT_DEFAULT;
     public static int placeDistance = PLACE_DISTANCE_DEFAULT;
     public static boolean placeInstantly = PLACE_INSTANTLY_DEFAULT;
@@ -87,6 +89,7 @@ public class ConfigurationHandler {
     public static Property propBlockDelta = null;
     public static Property propRenderDistance = null;
     public static Property propPlaceSpeed = null;
+    public static Property propBreakPause = null;
     public static Property propTimeout = null;
     public static Property propPlaceDistance = null;
     public static Property propPlaceInstantly = null;
@@ -164,9 +167,13 @@ public class ConfigurationHandler {
     }
 
     private static void loadConfigurationPrinter() {
-        propPlaceSpeed = configuration.get(Names.Config.Category.PRINTER, Names.Config.PLACE_SPEED, PLACE_SPEED_DEFAULT, Names.Config.PLACE_SPEED_DESC, 0, 100);
+        propPlaceSpeed = configuration.get(Names.Config.Category.PRINTER, Names.Config.PLACE_SPEED, PLACE_SPEED_DEFAULT, Names.Config.PLACE_SPEED_DESC, 0, 250);
         propPlaceSpeed.setLanguageKey(Names.Config.LANG_PREFIX + "." + Names.Config.PLACE_SPEED);
         placeSpeed = propPlaceSpeed.getInt(PLACE_SPEED_DEFAULT);
+
+        propBreakPause = configuration.get(Names.Config.Category.PRINTER, Names.Config.BREAK_PAUSE, BREAK_PAUSE_DEFAULT, Names.Config.BREAK_PAUSE_DESC, 0, 100);
+        propBreakPause.setLanguageKey(Names.Config.LANG_PREFIX + "." + Names.Config.BREAK_PAUSE);
+        breakPause = propBreakPause.getInt(BREAK_PAUSE_DEFAULT);
 
         propTimeout = configuration.get(Names.Config.Category.PRINTER, Names.Config.TIMEOUT, TIMEOUT_DEFAULT, Names.Config.TIMEOUT_DESC, 0, 100);
         propTimeout.setLanguageKey(Names.Config.LANG_PREFIX + "." + Names.Config.TIMEOUT);

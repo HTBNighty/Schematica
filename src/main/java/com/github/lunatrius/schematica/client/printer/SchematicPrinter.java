@@ -135,7 +135,16 @@ public class SchematicPrinter {
         for (BlockPos pos : BlockPos.getAllInBox(minX, minY, minZ, maxX, maxY, maxZ)) {
             blocks.add(new MBlockPos(pos));
         }
-        Collections.sort(blocks, (o1, o2) -> (int) (o1.distanceSqToCenter(dX, dY, dZ) - o2.distanceSqToCenter(dX, dY, dZ)));
+        Collections.sort(blocks, (o1, o2) -> {
+            double diff = o1.distanceSqToCenter(dX, dY, dZ) - o2.distanceSqToCenter(dX, dY, dZ);
+            if (diff < 0) {
+                return -1;
+            } else if (diff > 0) {
+                return 1;
+            } else {
+                return 0;
+            }
+        });
 
         for (MBlockPos pos : blocks)  {
             if (pos.distanceSqToCenter(dX, dY, dZ) > blockReachDistanceSq) {
@@ -319,16 +328,14 @@ public class SchematicPrinter {
             extraClicks = 0;
         }
 
-        if (!swapToItem(player.inventory, itemStack)) {
-            return false;
-        }
 
         if (((System.nanoTime() - lastSwapTime) / 1000000L) < ConfigurationHandler.swapDelay) {
             return false;
-        } else {
-            return placeBlock(world, player, pos, direction, offsetX, offsetY, offsetZ, extraClicks);
+        } else if (!swapToItem(player.inventory, itemStack)) {
+            return false;
         }
 
+        return placeBlock(world, player, pos, direction, offsetX, offsetY, offsetZ, extraClicks);
     }
 
     private boolean placeBlock(final WorldClient world, final EntityPlayerSP player, final BlockPos pos, final EnumFacing direction, final float offsetX, final float offsetY, final float offsetZ, final int extraClicks) {

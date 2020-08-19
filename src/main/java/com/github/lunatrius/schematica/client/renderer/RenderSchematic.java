@@ -54,6 +54,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraftforge.event.entity.player.PlayerDestroyItemEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -257,6 +258,15 @@ public class RenderSchematic extends RenderGlobal {
 
             this.profiler.endSection();
             this.profiler.endSection();
+        }
+    }
+
+    @SubscribeEvent
+    public void onPlayerDestroyItem (final PlayerDestroyItemEvent event) {
+        for (ContainerLocalRenderInformation renderInformation : this.renderInfos) {
+            if (!this.renderDispatcherOverlay.updateChunkLater(renderInformation.renderOverlay)) {
+                break;
+            }
         }
     }
 

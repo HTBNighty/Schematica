@@ -17,7 +17,10 @@ import net.minecraft.client.renderer.chunk.RenderChunk;
 import net.minecraft.client.renderer.chunk.VisGraph;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.renderer.vertex.VertexBuffer;
+import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.ChunkCache;
 import net.minecraft.world.World;
@@ -26,13 +29,17 @@ import org.lwjgl.opengl.GL11;
 public class RenderOverlay extends RenderChunk {
     private static enum BlockType {
         /** Purple - a block that is present in the world but not the schematic */
-        EXTRA_BLOCK(0xBF00BF),
+        EXTRA_BLOCK(0x3FBF00BF),
         /** Red - a mismatch between the block in the world and the schematic */
-        WRONG_BLOCK(0xFF0000),
+        WRONG_BLOCK(0x3FFF0000),
         /** Orange - a mismatch between the metadata for the block in the world and the schematic */
-        WRONG_META(0xBF5F00),
+        WRONG_META(0x3FBF5F00),
         /** Blue - a block that is present in the schematic but not in the world */
-        MISSING_BLOCK(0x00BFFF);
+        MISSING_BLOCK(0x3F00BFFF),
+        /** Teal - a block that is in the player's inventory */
+        IN_INVENTORY(0x3F00FFC8),
+        /** Green - a block that is placeable and in the player's inventory */
+        PLACEABLE(0x4A00FF00);
 
         public final int color;
 
@@ -132,7 +139,33 @@ public class RenderOverlay extends RenderChunk {
                             types[secX][secY][secZ] = BlockType.WRONG_META;
                         }
                     } else if (!isSchAirBlock) {
-                        types[secX][secY][secZ] = BlockType.MISSING_BLOCK;
+                        // These loops are put here so that they are not done when the dont need to be done
+                        boolean isInInventory = false;
+                        for (ItemStack stack : Minecraft.getMinecraft().player.inventory.mainInventory) {
+                            if (stack.getItem() == ItemBlock.getItemFromBlock(schBlock)) {
+                                isInInventory = true;
+                                break;
+                            }
+                        }
+
+                        boolean isPlaceable = false;
+                        if (isInInventory) {
+                            for (EnumFacing side : EnumFacing.VALUES) {
+                                IBlockState adjacentState = mcWorld.getBlockState(mcPos.offset(side));
+                                if (adjacentState.getBlock().canCollideCheck(adjacentState, false)) {
+                                    isPlaceable = true;
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (isPlaceable) {
+                            types[secX][secY][secZ] = BlockType.PLACEABLE;
+                        } else if (isInInventory) {
+                            types[secX][secY][secZ] = BlockType.IN_INVENTORY;
+                        } else {
+                            types[secX][secY][secZ] = BlockType.MISSING_BLOCK;
+                        }
                     }
                 }
             }
@@ -152,7 +185,7 @@ public class RenderOverlay extends RenderChunk {
                     }
 
                     int sides = getSides(types, secX, secY, secZ);
-                    GeometryTessellator.drawCuboid(buffer, pos, sides, 0x3F000000 | type.color);
+                    GeometryTessellator.drawCuboid(buffer, pos, sides, type.color);
                     compiledOverlay.setLayerUsed(layer);
                 }
             }

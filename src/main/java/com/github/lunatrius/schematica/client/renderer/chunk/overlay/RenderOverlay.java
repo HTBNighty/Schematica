@@ -2,6 +2,7 @@ package com.github.lunatrius.schematica.client.renderer.chunk.overlay;
 
 import com.github.lunatrius.core.client.renderer.GeometryMasks;
 import com.github.lunatrius.core.client.renderer.GeometryTessellator;
+import com.github.lunatrius.schematica.block.state.BlockStateHelper;
 import com.github.lunatrius.schematica.client.renderer.chunk.CompiledOverlay;
 import com.github.lunatrius.schematica.client.world.SchematicWorld;
 import com.github.lunatrius.schematica.handler.ConfigurationHandler;
@@ -17,6 +18,7 @@ import net.minecraft.client.renderer.chunk.RenderChunk;
 import net.minecraft.client.renderer.chunk.VisGraph;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.renderer.vertex.VertexBuffer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockRenderLayer;
@@ -139,12 +141,16 @@ public class RenderOverlay extends RenderChunk {
                             types[secX][secY][secZ] = BlockType.WRONG_META;
                         }
                     } else if (!isSchAirBlock) {
-                        // These loops are put here so that they are not done when the dont need to be done
                         boolean isInInventory = false;
                         for (ItemStack stack : Minecraft.getMinecraft().player.inventory.mainInventory) {
-                            if (stack.getItem() == ItemBlock.getItemFromBlock(schBlock)) {
-                                isInInventory = true;
-                                break;
+                            if (stack.getItem() instanceof ItemBlock) {
+                                // Figuring out this check was likely one of the most frustrating things.
+                                Block stackBlock = ((ItemBlock) stack.getItem()).getBlock();
+                                IBlockState stackstate = stackBlock.getStateFromMeta(stack.getMetadata());
+                                if (schBlockState == stackstate) {
+                                    isInInventory = true;
+                                    break;
+                                }
                             }
                         }
 

@@ -3,6 +3,7 @@ package com.github.lunatrius.schematica.handler.client;
 import com.github.lunatrius.schematica.client.gui.control.GuiSchematicControl;
 import com.github.lunatrius.schematica.client.gui.load.GuiSchematicLoad;
 import com.github.lunatrius.schematica.client.gui.save.GuiSchematicSave;
+import com.github.lunatrius.schematica.client.inventorycalculator.InventoryCalculator;
 import com.github.lunatrius.schematica.client.printer.SchematicPrinter;
 import com.github.lunatrius.schematica.client.renderer.RenderSchematic;
 import com.github.lunatrius.schematica.client.world.SchematicWorld;
@@ -15,6 +16,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.client.settings.KeyConflictContext;
 import net.minecraftforge.client.settings.KeyModifier;
@@ -36,6 +38,7 @@ public class InputHandler {
     private static final KeyBinding KEY_BINDING_PRINTER_TOGGLE = new KeyBinding(Names.Keys.PRINTER_TOGGLE, Keyboard.KEY_NONE, Names.Keys.CATEGORY);
     private static final KeyBinding KEY_BINDING_MOVE_HERE = new KeyBinding(Names.Keys.MOVE_HERE, Keyboard.KEY_NONE, Names.Keys.CATEGORY);
     private static final KeyBinding KEY_BINDING_PICK_BLOCK = new KeyBinding(Names.Keys.PICK_BLOCK, KeyConflictContext.IN_GAME, KeyModifier.SHIFT, -98, Names.Keys.CATEGORY);
+    private static final KeyBinding KEY_BINDING_GET_INV = new KeyBinding(Names.Keys.GET_INV, Keyboard.KEY_NONE, Names.Keys.CATEGORY);
 
     public static final KeyBinding[] KEY_BINDINGS = new KeyBinding[] {
             KEY_BINDING_LOAD,
@@ -47,7 +50,8 @@ public class InputHandler {
             KEY_BINDING_RENDER_TOGGLE,
             KEY_BINDING_PRINTER_TOGGLE,
             KEY_BINDING_MOVE_HERE,
-            KEY_BINDING_PICK_BLOCK
+            KEY_BINDING_PICK_BLOCK,
+            KEY_BINDING_GET_INV
     };
 
     private final Minecraft minecraft = Minecraft.getMinecraft();
@@ -121,6 +125,12 @@ public class InputHandler {
                 if (schematic != null && schematic.isRendering) {
                     pickBlock(schematic, ClientProxy.objectMouseOver);
                 }
+            }
+
+            if (KEY_BINDING_GET_INV.isPressed()) {
+                InventoryCalculator invCalc = InventoryCalculator.INSTANCE;
+                invCalc.calculateOptimalInv();
+//                Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(new TextComponentString("\2477[Mapmatica] \247r\n" + InventoryCalculator.getBlockListFromMap(invCalc.getOptimalInventory())));
             }
         }
     }

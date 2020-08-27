@@ -31,13 +31,13 @@ import org.lwjgl.opengl.GL11;
 public class RenderOverlay extends RenderChunk {
     private static enum BlockType {
         /** Purple - a block that is present in the world but not the schematic */
-        EXTRA_BLOCK(0x3FBF00BF),
+        EXTRA_BLOCK(0x1FBF00BF),
         /** Red - a mismatch between the block in the world and the schematic */
-        WRONG_BLOCK(0x3FFF0000),
+        WRONG_BLOCK(0x1FFF0000),
         /** Orange - a mismatch between the metadata for the block in the world and the schematic */
-        WRONG_META(0x3FBF5F00),
+        WRONG_META(0x1FBF5F00),
         /** Blue - a block that is present in the schematic but not in the world */
-        MISSING_BLOCK(0x3F00BFFF),
+        MISSING_BLOCK(0x1F00BFFF),
         /** Teal - a block that is in the player's inventory */
         IN_INVENTORY(0x3F00FFC8),
         /** Green - a block that is placeable and in the player's inventory */

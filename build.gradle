@@ -32,11 +32,11 @@ apply plugin: 'com.matthewprenger.cursegradle'
 apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'com.github.johnrengelman.shadow'
 
-ext.build = System.getenv().BUILD_NUMBER ?: 'git'
-ext.modversion = "${project.version_major}.${project.version_minor}.${project.version_micro}.${build}"
+//ext.build = System.getenv().BUILD_NUMBER ?: 'git'
+ext.modversion = "1.1.0"
 
 group = 'com.github.lunatrius'
-version = "${project.version_minecraft}-${modversion}"
+version = "1.1.0"
 
 sourceCompatibility = '1.8'
 targetCompatibility = '1.8'

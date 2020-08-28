@@ -151,7 +151,7 @@ public class BlockList {
         public String getFormattedAmountMissing(final String strAvailable, final String strMissing) {
             final int need = this.total - (this.inventory + this.placed);
             if (this.inventory != -1 && need > 0) {
-                return String.format("\u00a7c%s: %s", strMissing, getFormattedStackAmount(this.itemStack, need));
+                return String.format("\u00a7c%s: %s", strMissing, String.format("%d (%d Stx)", need, (int) Math.ceil(need / 64.0)));
             } else {
                 return String.format("\u00a7a%s", strAvailable);
             }

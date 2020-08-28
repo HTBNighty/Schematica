@@ -130,9 +130,6 @@ public class InputHandler {
 
             if (KEY_BINDING_GET_INV.isPressed()) {
                 this.minecraft.displayGuiScreen(new GuiInventoryCalculator(this.minecraft.currentScreen));
-//                InventoryCalculator invCalc = InventoryCalculator.INSTANCE;
-//                invCalc.calculateOptimalInv();
-//                Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(new TextComponentString("\2477[Mapmatica] \247r\n" + InventoryCalculator.getBlockListFromMap(invCalc.getOptimalInventory())));
             }
         }
     }

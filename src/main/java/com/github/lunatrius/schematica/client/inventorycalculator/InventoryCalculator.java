@@ -86,8 +86,6 @@ public class InventoryCalculator {
             this.floodAdd(currentPos, currentSchemState, openSlots);
             currentPos = getHighestFloodCountBlock();
         }
-
-        Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(new TextComponentString("\2477[Mapmatica] \n" + getBlockListFromMap(optimalInventory)));
     }
 
     /**

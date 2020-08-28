@@ -44,6 +44,8 @@ schematica.gui.materialamount=Amount
 schematica.gui.materialavailable=Available
 schematica.gui.materialmissing=Missing
 schematica.gui.materialdump=Save to file
+schematica.gui.stop=Stop
+schematica.gui.generate=Calculate
 
 # gui - config - categories
 schematica.config.category.debug=Debug
@@ -141,6 +143,7 @@ schematica.key.renderToggle=Toggle Rendering
 schematica.key.printerToggle=Toggle Printer
 schematica.key.moveHere=Move here
 schematica.key.pickBlock=Pick Block
+schematica.key.inventoryCalculator=Inventory Calc
 
 # commands - save
 schematica.command.save.usage=/schematicaSave <startX> <startY> <startZ> <endX> <endY> <endZ> <name> [format]

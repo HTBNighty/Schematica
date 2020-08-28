@@ -45,9 +45,9 @@ public class RenderOverlay extends RenderChunk {
         /** Green - a block that is placeable and in the player's inventory */
         PLACEABLE(0x4A00FF00),
         /** Pink - a block that is in the current optimal inventory */
-        OPTIMAL(0xFFD883FC),
+        OPTIMAL(0x3FD883FC),
         /** Purple - a block that is in the current optimal inventory and is placeable */
-        OPTIMAL_PLACEABLE(0xFF9D00E0);
+        OPTIMAL_PLACEABLE(0x4A9D00E0);
 
         public final int color;
 

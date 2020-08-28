@@ -2,6 +2,7 @@ package com.github.lunatrius.schematica.client.printer;
 
 import com.github.lunatrius.core.util.math.MBlockPos;
 import com.github.lunatrius.schematica.block.state.BlockStateHelper;
+import com.github.lunatrius.schematica.client.inventorycalculator.InventoryCalculator;
 import com.github.lunatrius.schematica.client.printer.nbtsync.NBTSync;
 import com.github.lunatrius.schematica.client.printer.nbtsync.SyncRegistry;
 import com.github.lunatrius.schematica.client.printer.registry.PlacementData;
@@ -133,7 +134,14 @@ public class SchematicPrinter {
 
         List<MBlockPos> blocks = new ArrayList<>();
         for (BlockPos pos : BlockPos.getAllInBox(minX, minY, minZ, maxX, maxY, maxZ)) {
-            blocks.add(new MBlockPos(pos));
+            MBlockPos block = new MBlockPos(pos);
+            if (InventoryCalculator.INSTANCE.getCountedBlocks() != null) {
+                if (InventoryCalculator.INSTANCE.getCountedBlocks().contains(block)) {
+                    blocks.add(new MBlockPos(pos));
+                }
+            } else {
+                blocks.add(new MBlockPos(pos));
+            }
         }
         Collections.sort(blocks, (o1, o2) -> {
             double diff = o1.distanceSqToCenter(dX, dY, dZ) - o2.distanceSqToCenter(dX, dY, dZ);

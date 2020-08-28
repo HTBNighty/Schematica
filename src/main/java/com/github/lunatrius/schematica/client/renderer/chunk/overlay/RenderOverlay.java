@@ -2,7 +2,9 @@ package com.github.lunatrius.schematica.client.renderer.chunk.overlay;
 
 import com.github.lunatrius.core.client.renderer.GeometryMasks;
 import com.github.lunatrius.core.client.renderer.GeometryTessellator;
+import com.github.lunatrius.core.util.math.MBlockPos;
 import com.github.lunatrius.schematica.block.state.BlockStateHelper;
+import com.github.lunatrius.schematica.client.inventorycalculator.InventoryCalculator;
 import com.github.lunatrius.schematica.client.renderer.chunk.CompiledOverlay;
 import com.github.lunatrius.schematica.client.world.SchematicWorld;
 import com.github.lunatrius.schematica.handler.ConfigurationHandler;
@@ -41,7 +43,11 @@ public class RenderOverlay extends RenderChunk {
         /** Teal - a block that is in the player's inventory */
         IN_INVENTORY(0x3F00FFC8),
         /** Green - a block that is placeable and in the player's inventory */
-        PLACEABLE(0x4A00FF00);
+        PLACEABLE(0x4A00FF00),
+        /** Pink - a block that is in the current optimal inventory */
+        OPTIMAL(0xFFD883FC),
+        /** Purple - a block that is in the current optimal inventory and is placeable */
+        OPTIMAL_PLACEABLE(0xFF9D00E0);
 
         public final int color;
 
@@ -165,12 +171,26 @@ public class RenderOverlay extends RenderChunk {
                             }
                         }
 
-                        if (isPlaceable) {
-                            types[secX][secY][secZ] = BlockType.PLACEABLE;
-                        } else if (isInInventory) {
-                            types[secX][secY][secZ] = BlockType.IN_INVENTORY;
+
+                        if (InventoryCalculator.INSTANCE.getCountedBlocks() != null) {
+                            if (InventoryCalculator.INSTANCE.getCountedBlocks().contains(new MBlockPos(pos))) {
+                                if (isPlaceable) {
+                                   types[secX][secY][secZ] = BlockType.OPTIMAL_PLACEABLE;
+                                } else {
+                                   types[secX][secY][secZ] = BlockType.OPTIMAL;
+                                }
+                            } else {
+                                types[secX][secY][secZ] = BlockType.MISSING_BLOCK;
+                            }
+
                         } else {
-                            types[secX][secY][secZ] = BlockType.MISSING_BLOCK;
+                            if (isPlaceable) {
+                                types[secX][secY][secZ] = BlockType.PLACEABLE;
+                            } else if (isInInventory) {
+                                types[secX][secY][secZ] = BlockType.IN_INVENTORY;
+                            } else {
+                                types[secX][secY][secZ] = BlockType.MISSING_BLOCK;
+                            }
                         }
                     }
                 }

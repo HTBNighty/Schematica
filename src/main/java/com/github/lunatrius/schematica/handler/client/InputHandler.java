@@ -1,6 +1,7 @@
 package com.github.lunatrius.schematica.handler.client;
 
 import com.github.lunatrius.schematica.client.gui.control.GuiSchematicControl;
+import com.github.lunatrius.schematica.client.gui.inventorycalc.GuiInventoryCalculator;
 import com.github.lunatrius.schematica.client.gui.load.GuiSchematicLoad;
 import com.github.lunatrius.schematica.client.gui.save.GuiSchematicSave;
 import com.github.lunatrius.schematica.client.inventorycalculator.InventoryCalculator;
@@ -128,8 +129,9 @@ public class InputHandler {
             }
 
             if (KEY_BINDING_GET_INV.isPressed()) {
-                InventoryCalculator invCalc = InventoryCalculator.INSTANCE;
-                invCalc.calculateOptimalInv();
+                this.minecraft.displayGuiScreen(new GuiInventoryCalculator(this.minecraft.currentScreen));
+//                InventoryCalculator invCalc = InventoryCalculator.INSTANCE;
+//                invCalc.calculateOptimalInv();
 //                Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(new TextComponentString("\2477[Mapmatica] \247r\n" + InventoryCalculator.getBlockListFromMap(invCalc.getOptimalInventory())));
             }
         }

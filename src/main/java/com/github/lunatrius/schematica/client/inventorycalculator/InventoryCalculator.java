@@ -3,6 +3,7 @@ package com.github.lunatrius.schematica.client.inventorycalculator;
 import com.github.lunatrius.core.util.math.BlockPosHelper;
 import com.github.lunatrius.core.util.math.MBlockPos;
 import com.github.lunatrius.schematica.api.ISchematic;
+import com.github.lunatrius.schematica.client.util.BlockList;
 import com.github.lunatrius.schematica.client.world.SchematicWorld;
 import com.github.lunatrius.schematica.proxy.ClientProxy;
 import net.minecraft.block.Block;
@@ -227,6 +228,18 @@ public class InventoryCalculator {
         } else {
             return false;
         }
+    }
+
+    public List<BlockList.WrappedItemStack> getWrappedItemStacks () {
+        List<BlockList.WrappedItemStack> ret = new ArrayList<>();
+
+        if (this.optimalInventory != null) {
+            for (IBlockState state : this.optimalInventory.keySet()) {
+                ret.add(new BlockList.WrappedItemStack(state.getBlock().getPickBlock(state, null, Minecraft.getMinecraft().world, null, Minecraft.getMinecraft().player), 0, this.optimalInventory.get(state)));
+            }
+        }
+
+        return ret;
     }
 
     public Set<MBlockPos> getCountedBlocks() {

@@ -69,6 +69,7 @@ public class GuiInventoryCalculator extends GuiScreenBase {
             } else if (guiButton.id == this.btnStop.id) {
                 InventoryCalculator.INSTANCE.setCountedBlocks(null);
                 InventoryCalculator.INSTANCE.setOptimalInventory(null);
+                this.blockList.clear();
             } else {
                 this.guiInventoryCalculatorSlot.actionPerformed(guiButton);
             }

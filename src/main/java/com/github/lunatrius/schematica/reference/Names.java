@@ -57,6 +57,8 @@ public final class Names {
         public static final String EXTRA_AIR_BLOCKS_DESC = "Extra blocks to consider as air for the schematic renderer.";
         public static final String SORT_TYPE = "sortType";
         public static final String SORT_TYPE_DESC = "Default sort type for the material list.";
+        public static final String INV_CALC_RANGE = "inventoryCalculatorRange";
+        public static final String INV_CALC_RANGE_DESC = "The range at which inventory calculator will check for matching blocks.";
 
         public static final String PRINTER_ENABLED = "printerEnabled";
         public static final String PRINTER_ENABLED_DESC = "Allow players to use the printer.";

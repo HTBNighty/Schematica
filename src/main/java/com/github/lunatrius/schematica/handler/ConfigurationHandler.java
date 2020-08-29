@@ -54,6 +54,7 @@ public class ConfigurationHandler {
     public static final boolean SAVE_ENABLED_DEFAULT = true;
     public static final boolean LOAD_ENABLED_DEFAULT = true;
     public static final int PLAYER_QUOTA_KILOBYTES_DEFAULT = 8192;
+    public static final int INVENTORY_CALCULATOR_RANGE_DEFAULT = 5;
 
     public static boolean dumpBlockList = DUMP_BLOCK_LIST_DEFAULT;
     public static boolean showDebugInfo = SHOW_DEBUG_INFO_DEFAULT;
@@ -81,6 +82,7 @@ public class ConfigurationHandler {
     public static boolean saveEnabled = SAVE_ENABLED_DEFAULT;
     public static boolean loadEnabled = LOAD_ENABLED_DEFAULT;
     public static int playerQuotaKilobytes = PLAYER_QUOTA_KILOBYTES_DEFAULT;
+    public static int inventoryCalculatorRange = INVENTORY_CALCULATOR_RANGE_DEFAULT;
 
     public static Property propDumpBlockList = null;
     public static Property propShowDebugInfo = null;
@@ -107,6 +109,7 @@ public class ConfigurationHandler {
     public static Property propSaveEnabled = null;
     public static Property propLoadEnabled = null;
     public static Property propPlayerQuotaKilobytes = null;
+    public static Property propInventoryCalcRange = null;
 
     private static final Set<Block> extraAirBlockList = new HashSet<Block>();
 
@@ -232,6 +235,10 @@ public class ConfigurationHandler {
         propSortType = configuration.get(Names.Config.Category.GENERAL, Names.Config.SORT_TYPE, SORT_TYPE_DEFAULT, Names.Config.SORT_TYPE_DESC);
         propSortType.setShowInGui(false);
         sortType = propSortType.getString();
+
+        propInventoryCalcRange = configuration.get(Names.Config.Category.GENERAL, Names.Config.INV_CALC_RANGE, INVENTORY_CALCULATOR_RANGE_DEFAULT, Names.Config.INV_CALC_RANGE_DESC, 1, 25);
+        propInventoryCalcRange.setLanguageKey(Names.Config.LANG_PREFIX + "." + Names.Config.INV_CALC_RANGE);
+        inventoryCalculatorRange = propInventoryCalcRange.getInt();
 
         normalizeSchematicPath();
         populateExtraAirBlocks();

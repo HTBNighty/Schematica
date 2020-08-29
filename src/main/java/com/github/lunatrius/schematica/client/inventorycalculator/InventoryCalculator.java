@@ -5,6 +5,7 @@ import com.github.lunatrius.core.util.math.MBlockPos;
 import com.github.lunatrius.schematica.api.ISchematic;
 import com.github.lunatrius.schematica.client.util.BlockList;
 import com.github.lunatrius.schematica.client.world.SchematicWorld;
+import com.github.lunatrius.schematica.handler.ConfigurationHandler;
 import com.github.lunatrius.schematica.proxy.ClientProxy;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -26,8 +27,8 @@ import java.util.*;
  * The goal is to find a list of block stacks that will all be used when taken to
  * a map and printed.
  *
- * TODO: Add a gui to help manipulate this
  *
+ * TODO: Multi-threading?
  * @author Old Chum
  * @since 8/26/20
  */
@@ -77,49 +78,81 @@ public class InventoryCalculator {
             }
         }
 
-        MBlockPos currentPos = getHighestFloodCountBlock();
+        int range = ConfigurationHandler.inventoryCalculatorRange;
+        MBlockPos currentPos = getHighestFloodCountBlock(range);
         // If the current block is null there are no more blocks to check,
         // Stop when the optimalInventory would fill up the player's inventory
         while (currentPos != null && doesFitInInv(schematic.getBlockState(currentPos), optimalInventory, openSlots)) {
-            IBlockState currentSchemState = schematic.getBlockState(currentPos);
 
-            this.floodAdd(currentPos, currentSchemState, openSlots);
-            currentPos = getHighestFloodCountBlock();
+            Map<IBlockState, Integer> targets = new HashMap<>();
+            for (MBlockPos targetPos : BlockPosHelper.getAllInBoxXZY(currentPos.x + range, currentPos.y + range, currentPos.z + range, currentPos.x - range, currentPos.y - range, currentPos.z - range)) {
+                if (schematicWorld.isInside(targetPos)) {
+                    targets.put(schematic.getBlockState(targetPos), targets.getOrDefault(schematic.getBlockState(targetPos), 1));
+                }
+            }
+
+            this.floodAdd(currentPos, targets, openSlots);
+            currentPos = getHighestFloodCountBlock(range);
         }
+    }
+
+    private String blockPosToString (BlockPos pos) {
+        if (pos == null) {
+            return "null";
+        }
+
+        return String.format("(%d, %d, %d)", pos.getX(), pos.getY(), pos.getZ());
     }
 
     /**
      * Adapted version of flood fill to add a chunk of blocks to the optimal inventory.
      */
-    private void floodAdd(MBlockPos pos, IBlockState targetState, int openSlots) {
+    private void floodAdd(MBlockPos pos, Map<IBlockState, Integer> targetStates, int openSlots) {
         IBlockState schemState = schematicWorld.getSchematic().getBlockState(pos);
 
-        if (schemState != targetState) {
+        if (!targetStates.containsKey(schemState)) {
             return;
         }
 
         IBlockState mcSate = Minecraft.getMinecraft().world.getBlockState(new BlockPos(pos.getX() + this.schematicWorld.position.getX(), pos.getY() + this.schematicWorld.position.getY(), pos.getZ() + this.schematicWorld.position.getZ()));
         if (pos.getZ() >= 1 && !countedBlocks.contains(pos) && mcSate.getBlock() == Blocks.AIR && schematicWorld.isInside(pos)) {
-            if (!addBlock(targetState, pos, openSlots)) {
+            if (!addBlock(schemState, pos, openSlots)) {
                 return;
             }
         } else {
             return;
         }
 
-        floodAdd(pos.offset(EnumFacing.NORTH), targetState, openSlots);
-        floodAdd(pos.offset(EnumFacing.SOUTH), targetState, openSlots);
-        floodAdd(pos.offset(EnumFacing.EAST), targetState, openSlots);
-        floodAdd(pos.offset(EnumFacing.WEST), targetState, openSlots);
-        floodAdd(pos.offset(EnumFacing.UP), targetState, openSlots);
-        floodAdd(pos.offset(EnumFacing.DOWN), targetState, openSlots);
+        List<EnumFacing> facings = new ArrayList<>();
+        Collections.addAll(facings, EnumFacing.VALUES);
+
+        facings.sort((o1, o2) -> {
+            ISchematic schematic = schematicWorld.getSchematic();
+            IBlockState state1 = schematic.getBlockState(pos.offset(o1));
+            IBlockState state2 = schematic.getBlockState(pos.offset(o2));
+
+            if (targetStates.containsKey(state1) && targetStates.containsKey(state2)) {
+                int diff = targetStates.get(state1) - targetStates.get(state2);
+                return Integer.compare(diff, 0);
+            } else if (state1 == schemState) {
+                return 1;
+            } else if (state2 == schemState) {
+                return -1;
+            } else {
+                return 0;
+            }
+        });
+
+        for (EnumFacing side : facings) {
+            floodAdd(pos.offset(side), targetStates, openSlots);
+        }
     }
 
     /** Gets the flood size of a block */
-    private int getBlockFloodCount(MBlockPos pos, IBlockState targetState, Set<MBlockPos> counted) {
+    private int getBlockFloodCount(MBlockPos pos, Map<IBlockState, Integer> targetStates, Set<MBlockPos> counted) {
         IBlockState schemState = schematicWorld.getSchematic().getBlockState(pos);
 
-        if (schemState != targetState) {
+        if (!targetStates.containsKey(schemState)) {
             return counted.size();
         }
 
@@ -131,18 +164,35 @@ public class InventoryCalculator {
             return counted.size();
         }
 
-        getBlockFloodCount(pos.offset(EnumFacing.NORTH), targetState, counted);
-        getBlockFloodCount(pos.offset(EnumFacing.SOUTH), targetState, counted);
-        getBlockFloodCount(pos.offset(EnumFacing.EAST), targetState, counted);
-        getBlockFloodCount(pos.offset(EnumFacing.WEST), targetState, counted);
-        getBlockFloodCount(pos.offset(EnumFacing.UP), targetState, counted);
-        getBlockFloodCount(pos.offset(EnumFacing.DOWN), targetState, counted);
+        List<EnumFacing> facings = new ArrayList<>();
+        Collections.addAll(facings, EnumFacing.VALUES);
+
+        facings.sort((o1, o2) -> {
+            ISchematic schematic = schematicWorld.getSchematic();
+            IBlockState state1 = schematic.getBlockState(pos.offset(o1));
+            IBlockState state2 = schematic.getBlockState(pos.offset(o2));
+
+            if (targetStates.containsKey(state1) && targetStates.containsKey(state2)) {
+                int diff = targetStates.get(state1) - targetStates.get(state2);
+                return Integer.compare(diff, 0);
+            } else if (state1 == schemState) {
+                return 1;
+            } else if (state2 == schemState) {
+                return -1;
+            } else {
+                return 0;
+            }
+        });
+
+        for (EnumFacing side : facings) {
+            getBlockFloodCount(pos.offset(side), targetStates, counted);
+        }
 
         return counted.size();
     }
 
     /** Gets the placeable block that has the highest flood count */
-    private MBlockPos getHighestFloodCountBlock () {
+    private MBlockPos getHighestFloodCountBlock (int range) {
         ISchematic schematic = this.schematicWorld.getSchematic();
         BlockPos.MutableBlockPos mcBlockPos = new BlockPos.MutableBlockPos();
         World mcWorld = Minecraft.getMinecraft().world;
@@ -159,22 +209,34 @@ public class InventoryCalculator {
 
             if (!countedBlocks.contains(pos) && !floodCountedBlocks.contains(pos) && realBlockState.getBlock() == Blocks.AIR && this.schematicWorld.isInside(pos)) {
                 foundAirBlock = true;
+
+                Map<IBlockState, Integer> targets = new HashMap<>();
+                targets.put(schematic.getBlockState(pos), 1);
+
+                // Find block to place off of
+                boolean foundSolidAdj = false;
                 for (EnumFacing side : EnumFacing.VALUES) {
-                    MBlockPos mcAdjacentPos = new MBlockPos(mcBlockPos.offset(side));
+                    IBlockState mcAdjacentState = mcWorld.getBlockState(mcBlockPos.offset(side));
                     MBlockPos schemAdjacentPos = pos.offset(side);
 
-                    IBlockState mcAdjacentState = mcWorld.getBlockState(mcAdjacentPos);
-                    Block mcAdjacentBlock = mcAdjacentState.getBlock();
+                    if (mcAdjacentState.getBlock().canCollideCheck(mcAdjacentState, false) || countedBlocks.contains(schemAdjacentPos)) {
+                        foundSolidAdj = true;
+                    }
+                }
 
-                    if (mcAdjacentBlock.canCollideCheck(mcAdjacentState, false) || countedBlocks.contains(schemAdjacentPos)) {
-                        int floodCount = getBlockFloodCount(pos, schematic.getBlockState(pos), new HashSet<>());
+                // Get targets
+                for (MBlockPos targetPos : BlockPosHelper.getAllInBoxXZY(pos.x + range, pos.y + range, pos.z + range, pos.x - range, pos.y - range, pos.z - range)) {
+                    if (schematicWorld.isInside(targetPos)) {
+                        targets.put(schematic.getBlockState(new MBlockPos(targetPos)), targets.getOrDefault(schematic.getBlockState(new MBlockPos(targetPos)), 1));
+                    }
+                }
 
-                        if (floodCount > maxFloodCount) {
-                            maxFloodCount = floodCount;
-                            maxPos = new MBlockPos(pos);
-                            floodCountedBlocks.add(maxPos);
-                            break;
-                        }
+                if (foundSolidAdj) {
+                    int floodCount = getBlockFloodCount(new MBlockPos(pos), targets, new HashSet<>());
+                    if (floodCount > maxFloodCount) {
+                        maxFloodCount = floodCount;
+                        maxPos = new MBlockPos(pos);
+                        floodCountedBlocks.add(new MBlockPos(pos));
                     }
                 }
             }

@@ -45,9 +45,9 @@ public class RenderOverlay extends RenderChunk {
         /** Green - a block that is placeable and in the player's inventory */
         PLACEABLE(0x4A00FF00),
         /** Pink - a block that is in the current optimal inventory */
-        OPTIMAL(0x3FD883FC),
+        OPTIMAL(0xFFD883FC),
         /** Purple - a block that is in the current optimal inventory and is placeable */
-        OPTIMAL_PLACEABLE(0x4A9D00E0);
+        OPTIMAL_PLACEABLE(0xFF9D00E0);
 
         public final int color;
 
@@ -148,16 +148,20 @@ public class RenderOverlay extends RenderChunk {
                         }
                     } else if (!isSchAirBlock) {
                         boolean isInInventory = false;
-                        for (ItemStack stack : Minecraft.getMinecraft().player.inventory.mainInventory) {
-                            if (stack.getItem() instanceof ItemBlock) {
-                                // Figuring out this check was likely one of the most frustrating things.
-                                Block stackBlock = ((ItemBlock) stack.getItem()).getBlock();
-                                IBlockState stackstate = stackBlock.getStateFromMeta(stack.getMetadata());
-                                if (schBlockState == stackstate) {
-                                    isInInventory = true;
-                                    break;
+                        if (!Minecraft.getMinecraft().player.isCreative()) {
+                            for (ItemStack stack : Minecraft.getMinecraft().player.inventory.mainInventory) {
+                                if (stack.getItem() instanceof ItemBlock) {
+                                    // Figuring out this check was likely one of the most frustrating things.
+                                    Block stackBlock = ((ItemBlock) stack.getItem()).getBlock();
+                                    IBlockState stackstate = stackBlock.getStateFromMeta(stack.getMetadata());
+                                    if (schBlockState == stackstate) {
+                                        isInInventory = true;
+                                        break;
+                                    }
                                 }
                             }
+                        } else {
+                            isInInventory = true;
                         }
 
                         boolean isPlaceable = false;

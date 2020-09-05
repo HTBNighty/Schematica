@@ -1,5 +1,6 @@
 package com.github.lunatrius.schematica.client.inventorycalculator;
 
+import com.github.lunatrius.core.entity.EntityHelper;
 import com.github.lunatrius.core.util.math.BlockPosHelper;
 import com.github.lunatrius.core.util.math.MBlockPos;
 import com.github.lunatrius.schematica.api.ISchematic;
@@ -278,7 +279,15 @@ public class InventoryCalculator {
 
         if (this.optimalInventory != null) {
             for (IBlockState state : this.optimalInventory.keySet()) {
-                ret.add(new BlockList.WrappedItemStack(state.getBlock().getPickBlock(state, null, Minecraft.getMinecraft().world, null, Minecraft.getMinecraft().player), 0, this.optimalInventory.get(state)));
+                BlockList.WrappedItemStack wrappedItemStack = new BlockList.WrappedItemStack(state.getBlock().getPickBlock(state, null, Minecraft.getMinecraft().world, null, Minecraft.getMinecraft().player), 0, this.optimalInventory.get(state));
+
+                if (Minecraft.getMinecraft().player.capabilities.isCreativeMode) {
+                    wrappedItemStack.inventory = -1;
+                } else {
+                    wrappedItemStack.inventory = EntityHelper.getItemCountInInventory(Minecraft.getMinecraft().player.inventory, wrappedItemStack.itemStack.getItem(), wrappedItemStack.itemStack.getItemDamage());
+                }
+
+                ret.add(wrappedItemStack);
             }
         }
 

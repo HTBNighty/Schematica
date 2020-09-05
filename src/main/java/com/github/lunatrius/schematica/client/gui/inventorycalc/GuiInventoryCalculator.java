@@ -3,11 +3,8 @@ package com.github.lunatrius.schematica.client.gui.inventorycalc;
 import com.github.lunatrius.core.client.gui.GuiScreenBase;
 import com.github.lunatrius.schematica.client.inventorycalculator.InventoryCalculator;
 import com.github.lunatrius.schematica.client.util.BlockList;
-import com.github.lunatrius.schematica.client.world.SchematicWorld;
-import com.github.lunatrius.schematica.proxy.ClientProxy;
 import com.github.lunatrius.schematica.reference.Names;
 import com.github.lunatrius.schematica.util.ItemStackSortType;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
@@ -29,8 +26,6 @@ public class GuiInventoryCalculator extends GuiScreenBase {
 
     public GuiInventoryCalculator(final GuiScreen guiScreen) {
         super(guiScreen);
-        final Minecraft minecraft = Minecraft.getMinecraft();
-        final SchematicWorld schematic = ClientProxy.schematic;
         this.blockList = InventoryCalculator.INSTANCE.getWrappedItemStacks();
         this.sortType.sort(this.blockList);
     }

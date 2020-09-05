@@ -8,24 +8,24 @@ import java.util.Comparator;
 import java.util.List;
 
 public enum ItemStackSortType {
-    NAME_ASC("name", "\u2191", (Comparator<BlockList.WrappedItemStack>) (final BlockList.WrappedItemStack wrappedItemStackA, final BlockList.WrappedItemStack wrappedItemStackB) -> {
+    NAME_ASC("name", "\u2191", (final BlockList.WrappedItemStack wrappedItemStackA, final BlockList.WrappedItemStack wrappedItemStackB) -> {
         final String nameA = wrappedItemStackA.getItemStackDisplayName();
         final String nameB = wrappedItemStackB.getItemStackDisplayName();
 
         return nameA.compareTo(nameB);
     }),
-    NAME_DESC("name", "\u2193", (Comparator<BlockList.WrappedItemStack>) (final BlockList.WrappedItemStack wrappedItemStackA, final BlockList.WrappedItemStack wrappedItemStackB) -> {
+    NAME_DESC("name", "\u2193", (final BlockList.WrappedItemStack wrappedItemStackA, final BlockList.WrappedItemStack wrappedItemStackB) -> {
         final String nameA = wrappedItemStackA.getItemStackDisplayName();
         final String nameB = wrappedItemStackB.getItemStackDisplayName();
 
         return nameB.compareTo(nameA);
     }),
-    SIZE_ASC("amount", "\u2191", (Comparator<BlockList.WrappedItemStack>) (final BlockList.WrappedItemStack wrappedItemStackA, final BlockList.WrappedItemStack wrappedItemStackB) -> {
-        return wrappedItemStackA.total - wrappedItemStackB.total;
-    }),
-    SIZE_DESC("amount", "\u2193", (Comparator<BlockList.WrappedItemStack>) (final BlockList.WrappedItemStack wrappedItemStackA, final BlockList.WrappedItemStack wrappedItemStackB) -> {
-        return wrappedItemStackB.total - wrappedItemStackA.total;
-    });
+
+    SIZE_ASC("amount", "\u2191", (final BlockList.WrappedItemStack wrappedItemStackA, final BlockList.WrappedItemStack wrappedItemStackB) -> wrappedItemStackA.total - wrappedItemStackB.total),
+    SIZE_DESC("amount", "\u2193", (final BlockList.WrappedItemStack wrappedItemStackA, final BlockList.WrappedItemStack wrappedItemStackB) -> wrappedItemStackB.total - wrappedItemStackA.total),
+
+    REMAINING_ASC("remaining", "\u2191", (final BlockList.WrappedItemStack wrappedItemStackA, final BlockList.WrappedItemStack wrappedItemStackB) -> (wrappedItemStackA.total - wrappedItemStackA.placed) - wrappedItemStackB.total),
+    REMAINING_DESC("remaining", "\u2193", (final BlockList.WrappedItemStack wrappedItemStackA, final BlockList.WrappedItemStack wrappedItemStackB) -> (wrappedItemStackB.total - wrappedItemStackB.placed) - wrappedItemStackA.total);
 
     private final Comparator<BlockList.WrappedItemStack> comparator;
 

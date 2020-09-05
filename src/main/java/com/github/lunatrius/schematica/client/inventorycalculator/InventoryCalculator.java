@@ -101,7 +101,11 @@ public class InventoryCalculator {
                 boolean hasIncompleteStack = false;
                 for (IBlockState state : optimalInventory.keySet()) {
                     if (optimalInventory.get(state) % 64 != 0) {
-                        targets.put(state, 1); // We dont need to worry about the number of blocks in for targets
+                        if (!canPlace(state)) {
+                            continue;
+                        }
+
+                        targets.put(state, 1); // We dont need to worry about the number of blocks for targets
                         whitelist.add(state);
                         hasIncompleteStack = true;
                     }
@@ -247,12 +251,33 @@ public class InventoryCalculator {
 
         if (maxPos != null) {
             return maxPos;
-        } else if (foundAirBlock) {
-            System.out.println("[SOUPHACK+ DEBUG ENHANCEMENT SUITE] The map better be empty...");
-            return new MBlockPos(0, 0, 1);
         } else {
             return null;
         }
+    }
+
+    /** Tells if a blockstate has an instance in the schematic and if that instance can be placed */
+    private boolean canPlace (IBlockState state) {
+        ISchematic schematic = this.schematicWorld.getSchematic();
+        BlockPos.MutableBlockPos mcBlockPos = new BlockPos.MutableBlockPos();
+
+        for (MBlockPos pos : BlockPosHelper.getAllInBoxXZY(0, 0, 1, schematic.getWidth(), schematic.getHeight(), schematic.getLength())) {
+            mcBlockPos.setPos(pos.getX() + this.schematicWorld.position.getX(), pos.getY() + this.schematicWorld.position.getY(), pos.getZ() + this.schematicWorld.position.getZ());
+            IBlockState schemState = schematic.getBlockState(pos);
+
+            if (schemState == state) {
+                for (EnumFacing side : EnumFacing.VALUES) {
+                    IBlockState realAdjacent = schematic.getBlockState(mcBlockPos.offset(side));
+                    MBlockPos adjacentPos = pos.offset(side);
+
+                    if (realAdjacent.getBlock().canCollideCheck(realAdjacent, false) || countedBlocks.contains(adjacentPos)) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
     }
 
     /** If the given block could fit in the inventory */

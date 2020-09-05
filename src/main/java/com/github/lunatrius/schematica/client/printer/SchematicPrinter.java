@@ -155,7 +155,7 @@ public class SchematicPrinter {
         });
 
         for (MBlockPos pos : blocks)  {
-            if (pos.distanceSqToCenter(dX, dY, dZ) > blockReachDistanceSq) {
+            if (pos.distanceSqToCenter(dX, dY, dZ) > blockReachDistanceSq || !ConfigurationHandler.printNoobline && !(pos.getZ() >= 1) ) {
                 continue;
             }
 

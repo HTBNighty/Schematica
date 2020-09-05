@@ -115,7 +115,7 @@ public class InventoryCalculator {
         }
 
         IBlockState mcSate = Minecraft.getMinecraft().world.getBlockState(new BlockPos(pos.getX() + this.schematicWorld.position.getX(), pos.getY() + this.schematicWorld.position.getY(), pos.getZ() + this.schematicWorld.position.getZ()));
-        if (pos.getZ() >= 1 && !countedBlocks.contains(pos) && mcSate.getBlock() == Blocks.AIR && schematicWorld.isInside(pos)) {
+        if ((ConfigurationHandler.printNoobline || !(pos.getZ() >= 1)) && !countedBlocks.contains(pos) && mcSate.getBlock() == Blocks.AIR && schematicWorld.isInside(pos)) {
             if (!addBlock(schemState, pos, openSlots)) {
                 return;
             }
@@ -164,29 +164,12 @@ public class InventoryCalculator {
             return counted.size();
         }
 
-        List<EnumFacing> facings = new ArrayList<>();
-        Collections.addAll(facings, EnumFacing.VALUES);
-
-        facings.sort((o1, o2) -> {
-            ISchematic schematic = schematicWorld.getSchematic();
-            IBlockState state1 = schematic.getBlockState(pos.offset(o1));
-            IBlockState state2 = schematic.getBlockState(pos.offset(o2));
-
-            if (targetStates.containsKey(state1) && targetStates.containsKey(state2)) {
-                int diff = targetStates.get(state1) - targetStates.get(state2);
-                return Integer.compare(diff, 0);
-            } else if (state1 == schemState) {
-                return 1;
-            } else if (state2 == schemState) {
-                return -1;
-            } else {
-                return 0;
-            }
-        });
-
-        for (EnumFacing side : facings) {
-            getBlockFloodCount(pos.offset(side), targetStates, counted);
-        }
+        getBlockFloodCount(pos.offset(EnumFacing.NORTH), targetStates, counted);
+        getBlockFloodCount(pos.offset(EnumFacing.SOUTH), targetStates, counted);
+        getBlockFloodCount(pos.offset(EnumFacing.EAST), targetStates, counted);
+        getBlockFloodCount(pos.offset(EnumFacing.WEST), targetStates, counted);
+        getBlockFloodCount(pos.offset(EnumFacing.UP), targetStates, counted);
+        getBlockFloodCount(pos.offset(EnumFacing.DOWN), targetStates, counted);
 
         return counted.size();
     }

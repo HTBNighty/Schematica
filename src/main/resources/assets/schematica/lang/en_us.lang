@@ -96,6 +96,8 @@ schematica.config.destroyInstantly=Destroy Instantly
 schematica.config.destroyInstantly.tooltip=Destroy all blocks that can be destroyed in one tick.
 schematica.config.placeAdjacent=Place Only Adjacent
 schematica.config.placeAdjacent.tooltip=Place blocks only if there is an adjacent block next to them.
+schematica.config.printNoobline=Print Noobline
+schematica.config.printNoobline.tooltip=If printer should place blocks on the noobline
 
 # gui - config - printer - swap slots
 schematica.config.swapSlot0=Allow Slot 1

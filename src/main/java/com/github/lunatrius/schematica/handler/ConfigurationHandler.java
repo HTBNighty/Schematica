@@ -43,6 +43,7 @@ public class ConfigurationHandler {
     public static final boolean DESTROY_BLOCKS_DEFAULT = false;
     public static final boolean DESTROY_INSTANTLY_DEFAULT = false;
     public static final boolean PLACE_ADJACENT_DEFAULT = true;
+    public static final boolean PRINT_NOOBLINE_DEFAULT = false;
     public static final boolean[] SWAP_SLOTS_DEFAULT = new boolean[] {
             false, false, false, false, false, true, true, true, true
     };
@@ -73,6 +74,7 @@ public class ConfigurationHandler {
     public static boolean destroyBlocks = DESTROY_BLOCKS_DEFAULT;
     public static boolean destroyInstantly = DESTROY_INSTANTLY_DEFAULT;
     public static boolean placeAdjacent = PLACE_ADJACENT_DEFAULT;
+    public static boolean printNoobline = PRINT_NOOBLINE_DEFAULT;
     public static boolean[] swapSlots = Arrays.copyOf(SWAP_SLOTS_DEFAULT, SWAP_SLOTS_DEFAULT.length);
     public static final Queue<Integer> swapSlotsQueue = new ArrayDeque<Integer>();
     public static File schematicDirectory = SCHEMATIC_DIRECTORY_DEFAULT;
@@ -101,6 +103,7 @@ public class ConfigurationHandler {
     public static Property propDestroyBlocks = null;
     public static Property propDestroyInstantly = null;
     public static Property propPlaceAdjacent = null;
+    public static Property propPrintNoobline = null;
     public static Property[] propSwapSlots = new Property[SWAP_SLOTS_DEFAULT.length];
     public static Property propSchematicDirectory = null;
     public static Property propExtraAirBlocks = null;
@@ -208,6 +211,10 @@ public class ConfigurationHandler {
         propPlaceAdjacent = configuration.get(Names.Config.Category.PRINTER, Names.Config.PLACE_ADJACENT, PLACE_ADJACENT_DEFAULT, Names.Config.PLACE_ADJACENT_DESC);
         propPlaceAdjacent.setLanguageKey(Names.Config.LANG_PREFIX + "." + Names.Config.PLACE_ADJACENT);
         placeAdjacent = propPlaceAdjacent.getBoolean(PLACE_ADJACENT_DEFAULT);
+
+        propPrintNoobline = configuration.get(Names.Config.Category.PRINTER, Names.Config.PRINT_NOOBLINE, PRINT_NOOBLINE_DEFAULT, Names.Config.PRINT_NOOBLINE_DESC);
+        propPrintNoobline.setLanguageKey(Names.Config.LANG_PREFIX + "." + Names.Config.PRINT_NOOBLINE);
+        printNoobline = propPrintNoobline.getBoolean(PRINT_NOOBLINE_DEFAULT);
     }
 
     private static void loadConfigurationSwapSlots() {

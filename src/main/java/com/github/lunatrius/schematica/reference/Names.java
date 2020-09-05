@@ -48,6 +48,8 @@ public final class Names {
         public static final String DESTROY_INSTANTLY_DESC = "Destroy all blocks that can be destroyed in one tick.";
         public static final String PLACE_ADJACENT = "placeAdjacent";
         public static final String PLACE_ADJACENT_DESC = "Place blocks only if there is an adjacent block next to them.";
+        public static final String PRINT_NOOBLINE = "printNoobline";
+        public static final String PRINT_NOOBLINE_DESC = "If printer should place blocks on the noobline";
         public static final String SWAP_SLOT = "swapSlot";
         public static final String SWAP_SLOT_DESC = "Allow the printer to use this hotbar slot.";
 

@@ -336,10 +336,11 @@ public class SchematicPrinter {
             extraClicks = 0;
         }
 
+        if (!swapToItem(player.inventory, itemStack)) {
+            return false;
+        }
 
         if (((System.nanoTime() - lastSwapTime) / 1000000L) < ConfigurationHandler.swapDelay) {
-            return false;
-        } else if (!swapToItem(player.inventory, itemStack)) {
             return false;
         }
 

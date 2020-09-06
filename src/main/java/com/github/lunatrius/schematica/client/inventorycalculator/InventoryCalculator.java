@@ -140,10 +140,18 @@ public class InventoryCalculator {
             return;
         }
 
-        List<EnumFacing> facings = new ArrayList<>();
-        Collections.addAll(facings, EnumFacing.VALUES);
+        // Hopefully prevent long lines of blocks, sort will keep the faces in the same place if the faces are the same in terms of the comparator
+        // This being a primitive array also makes it faster
+        EnumFacing[] facings = new EnumFacing[]{
+            EnumFacing.NORTH,
+            EnumFacing.EAST,
+            EnumFacing.DOWN,
+            EnumFacing.SOUTH,
+            EnumFacing.WEST,
+            EnumFacing.UP
+        };
 
-        facings.sort((o1, o2) -> {
+        Arrays.sort(facings, (o1, o2) -> {
             ISchematic schematic = schematicWorld.getSchematic();
             IBlockState state1 = schematic.getBlockState(pos.offset(o1));
             IBlockState state2 = schematic.getBlockState(pos.offset(o2));

@@ -298,10 +298,6 @@ public class SchematicPrinter {
     }
 
     private boolean placeBlock(final WorldClient world, final EntityPlayerSP player, final BlockPos pos, final IBlockState blockState, final ItemStack itemStack) {
-        if (((System.nanoTime() - lastSwapTime) / 1000000L) < ConfigurationHandler.swapDelay) {
-            return false;
-        }
-
         if (itemStack.getItem() instanceof ItemBucket) {
             return false;
         }
@@ -342,11 +338,9 @@ public class SchematicPrinter {
             extraClicks = 0;
         }
 
-        if (!swapToItem(player.inventory, itemStack)) {
-            return false;
-        }
-
         if (((System.nanoTime() - lastSwapTime) / 1000000L) < ConfigurationHandler.swapDelay) {
+            return false;
+        } else if (!swapToItem(player.inventory, itemStack)) {
             return false;
         }
 

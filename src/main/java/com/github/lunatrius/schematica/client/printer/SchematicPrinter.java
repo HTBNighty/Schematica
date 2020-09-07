@@ -145,16 +145,8 @@ public class SchematicPrinter {
                 blocks.add(new MBlockPos(pos));
             }
         }
-        Collections.sort(blocks, (o1, o2) -> {
-            double diff = o1.distanceSqToCenter(dX, dY, dZ) - o2.distanceSqToCenter(dX, dY, dZ);
-            if (diff < 0) {
-                return -1;
-            } else if (diff > 0) {
-                return 1;
-            } else {
-                return 0;
-            }
-        });
+
+        blocks.sort(Comparator.comparingDouble(o -> o.distanceSqToCenter(dX, dY, dZ)));
 
         for (MBlockPos pos : blocks)  {
             if (pos.distanceSqToCenter(dX, dY, dZ) > blockReachDistanceSq || !ConfigurationHandler.printNoobline && !(pos.getZ() >= 1) ) {

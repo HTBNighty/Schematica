@@ -29,10 +29,12 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.BlockFluidBase;
 
 import java.util.*;
+import java.util.concurrent.ExecutionException;
 
 public class SchematicPrinter {
     public static final SchematicPrinter INSTANCE = new SchematicPrinter();
@@ -296,6 +298,10 @@ public class SchematicPrinter {
     }
 
     private boolean placeBlock(final WorldClient world, final EntityPlayerSP player, final BlockPos pos, final IBlockState blockState, final ItemStack itemStack) {
+        if (((System.nanoTime() - lastSwapTime) / 1000000L) < ConfigurationHandler.swapDelay) {
+            return false;
+        }
+
         if (itemStack.getItem() instanceof ItemBucket) {
             return false;
         }

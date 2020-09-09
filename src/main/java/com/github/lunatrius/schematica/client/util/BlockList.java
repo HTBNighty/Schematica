@@ -7,12 +7,14 @@ import com.github.lunatrius.schematica.block.state.BlockStateHelper;
 import com.github.lunatrius.schematica.client.world.SchematicWorld;
 import com.github.lunatrius.schematica.reference.Reference;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockCarpet;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.BlockSlab;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
@@ -150,10 +152,19 @@ public class BlockList {
 
         public String getFormattedAmountMissing(final String strAvailable, final String strMissing) {
             final int need = this.total - (this.inventory + this.placed);
-            if (this.inventory != -1 && need > 0) {
-                return String.format("\u00a7c%s: %s", strMissing, String.format("%d (%d Stx)", need, (int) Math.ceil(need / 64.0)));
-            } else {
-                return String.format("\u00a7a%s", strAvailable);
+            final int needStx = (int) Math.ceil((this.total - this.placed) / 64.0);
+            final int invStx = (int) Math.ceil(this.inventory / 64.0);
+
+            String strAmount = String.format("%d (%s)", need, needStx >= 27 ? (int) Math.ceil(needStx / 27.0) + " Shlk" : needStx + " Stx");
+
+            if (this.inventory == -1) { // Green when inventory is -1 (Typically when in creative)
+                return String.format("\u00a7a%s", strAmount);
+            } else if (need > 0) { // Red when there is not enough in the inventory
+                return String.format("\u00a7c%s", strAmount);
+            } else if (invStx == needStx && this.inventory >= need) { // Green when there are exactly enough stacks in the inventory
+                return String.format("\u00a7a%s", strAmount);
+            } else { // Yellow when there are too many stacks in the inventory
+                return String.format("\u00a7e-%d Stx", invStx - needStx);
             }
         }
 

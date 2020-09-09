@@ -33,10 +33,10 @@ apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'com.github.johnrengelman.shadow'
 
 //ext.build = System.getenv().BUILD_NUMBER ?: 'git'
-ext.modversion = "1.1.0"
+ext.modversion = "1.2"
 
 group = 'com.github.lunatrius'
-version = "1.1.2.1"
+version = "1.2"
 
 sourceCompatibility = '1.8'
 targetCompatibility = '1.8'

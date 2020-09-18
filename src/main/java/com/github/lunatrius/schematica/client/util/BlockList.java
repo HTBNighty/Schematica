@@ -11,6 +11,7 @@ import net.minecraft.block.BlockCarpet;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.BlockSlab;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -152,8 +153,19 @@ public class BlockList {
 
         public String getFormattedAmountMissing(final String strAvailable, final String strMissing) {
             final int need = this.total - (this.inventory + this.placed);
-            final int needStx = (int) Math.ceil((this.total - this.placed) / 64.0);
-            final int invStx = (int) Math.ceil(this.inventory / 64.0);
+            final int needStx = Math.abs((int) Math.ceil((this.total - this.placed) / 64.0));
+
+            // Get invStx
+            int invStx = 0;
+            for (ItemStack stack : Minecraft.getMinecraft().player.inventory.mainInventory) {
+                if (stack.getItem() == this.itemStack.getItem()) {
+                    invStx++;
+                }
+            }
+            
+            if (Minecraft.getMinecraft().player.inventory.offHandInventory.get(0).getItem() == this.itemStack.getItem()) {
+                invStx++;
+            }
 
             String strAmount = String.format("%d (%s)", need, needStx >= 27 ? (int) Math.ceil(needStx / 27.0) + " Shlk" : needStx + " Stx");
 
@@ -161,10 +173,10 @@ public class BlockList {
                 return String.format("\u00a7a%s", strAmount);
             } else if (need > 0) { // Red when there is not enough in the inventory
                 return String.format("\u00a7c%s", strAmount);
-            } else if (invStx == needStx && this.inventory >= need) { // Green when there are exactly enough stacks in the inventory
+            } else if (invStx == needStx && this.inventory >= need) { // Green when there are exactly enough stacks and total items in the inventory
                 return String.format("\u00a7a%s", strAmount);
             } else { // Yellow when there are too many stacks in the inventory
-                return String.format("\u00a7e-%d Stx", invStx - needStx);
+                return String.format("\u00a7e%s (%d Stx)", need, Math.abs((int) Math.ceil((this.total - (this.inventory + this.placed)) / 64.0)) - invStx);
             }
         }
 

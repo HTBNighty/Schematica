@@ -162,7 +162,7 @@ public class BlockList {
                     invStx++;
                 }
             }
-            
+
             if (Minecraft.getMinecraft().player.inventory.offHandInventory.get(0).getItem() == this.itemStack.getItem()) {
                 invStx++;
             }

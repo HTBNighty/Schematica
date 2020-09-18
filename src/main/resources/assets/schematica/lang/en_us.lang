@@ -125,6 +125,10 @@ schematica.config.schematicDirectory=Schematic Directory
 schematica.config.schematicDirectory.tooltip=Schematic directory.
 schematica.config.extraAirBlocks=Extra Air Blocks
 schematica.config.extraAirBlocks.tooltip=Extra blocks to consider as air for the schematic renderer.
+schematica.config.inventoryCalculatorRange=Inventory Calculator Range
+schematica.config.inventoryCalculatorRange.tooltip=The range at which inventory calculator will check for matching blocks.
+schematica.config.autoAlign=Auto Align
+schematica.config.autoAlign.tooltip=If the schematic should be aligned with the world's map boundaries when brought to the player.
 
 # gui - config - server
 schematica.config.printerEnabled=Allow Printer

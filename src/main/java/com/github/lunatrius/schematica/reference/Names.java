@@ -61,6 +61,8 @@ public final class Names {
         public static final String SORT_TYPE_DESC = "Default sort type for the material list.";
         public static final String INV_CALC_RANGE = "inventoryCalculatorRange";
         public static final String INV_CALC_RANGE_DESC = "The range at which inventory calculator will check for matching blocks.";
+        public static final String AUTO_ALIGN = "autoAlign";
+        public static final String AUTO_ALIGN_DESC = "If the schematic should be aligned with the world's map boundaries when brought to the player.";
 
         public static final String PRINTER_ENABLED = "printerEnabled";
         public static final String PRINTER_ENABLED_DESC = "Allow players to use the printer.";

@@ -125,27 +125,41 @@ public class ClientProxy extends CommonProxy {
     public static void moveSchematicToPlayer(final SchematicWorld schematic) {
         if (schematic != null) {
             final MBlockPos position = schematic.position;
-            position.x = (int) Math.floor(playerPosition.x);
             position.y = (int) Math.floor(playerPosition.y);
-            position.z = (int) Math.floor(playerPosition.z);
 
-            switch (rotationRender) {
-            case 0:
-                position.x -= schematic.getWidth();
-                position.z += 1;
-                break;
-            case 1:
-                position.x -= schematic.getWidth();
-                position.z -= schematic.getLength();
-                break;
-            case 2:
-                position.x += 1;
-                position.z -= schematic.getLength();
-                break;
-            case 3:
-                position.x += 1;
-                position.z += 1;
-                break;
+            if (ConfigurationHandler.autoAlign) {
+                final Minecraft mc = Minecraft.getMinecraft();
+                final EntityPlayer player = mc.player;
+
+                position.x = (int) Math.floor((player.posX + 64) / 128) * 128 - 64;
+                position.z = ((int) Math.floor((player.posZ + 64) / 128) * 128 - 64);
+
+                // If there is a noobline, move the schematic up 1
+                if (schematic.getLength() == 129) {
+                    position.z--;
+                }
+            } else {
+                position.x = (int) Math.floor(playerPosition.x);
+                position.z = (int) Math.floor(playerPosition.z);
+
+                switch (rotationRender) {
+                    case 0:
+                        position.x -= schematic.getWidth();
+                        position.z += 1;
+                        break;
+                    case 1:
+                        position.x -= schematic.getWidth();
+                        position.z -= schematic.getLength();
+                        break;
+                    case 2:
+                        position.x += 1;
+                        position.z -= schematic.getLength();
+                        break;
+                    case 3:
+                        position.x += 1;
+                        position.z += 1;
+                        break;
+                }
             }
         }
     }

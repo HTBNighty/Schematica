@@ -158,8 +158,10 @@ public class BlockList {
             // Get invStx
             int invStx = 0;
             for (ItemStack stack : Minecraft.getMinecraft().player.inventory.mainInventory) {
-                if (stack.getItem() == this.itemStack.getItem()) {
-                    invStx++;
+                if (stack.getItem() instanceof ItemBlock) {
+                    if (((ItemBlock) stack.getItem()).getBlock().getStateFromMeta(stack.getMetadata()) == ((ItemBlock) this.itemStack.getItem()).getBlock().getStateFromMeta(this.itemStack.getMetadata())) {
+                        invStx++;
+                    }
                 }
             }
 

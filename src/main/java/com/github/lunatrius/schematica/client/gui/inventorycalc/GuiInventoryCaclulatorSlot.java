@@ -24,7 +24,6 @@ public class GuiInventoryCaclulatorSlot extends GuiSlot {
     public GuiInventoryCaclulatorSlot(final GuiInventoryCalculator parent) {
         super(Minecraft.getMinecraft(), parent.width, parent.height, 16, parent.height - 34, 24);
         this.guiInventoryCalculator = parent;
-        this.selectedIndex = -1;
     }
 
     @Override

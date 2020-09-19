@@ -1,17 +1,22 @@
 package com.github.lunatrius.schematica.client.inventorycalculator;
 
+import com.github.lunatrius.core.client.gui.GuiHelper;
 import com.github.lunatrius.core.entity.EntityHelper;
 import com.github.lunatrius.core.util.math.BlockPosHelper;
 import com.github.lunatrius.core.util.math.MBlockPos;
 import com.github.lunatrius.schematica.api.ISchematic;
+import com.github.lunatrius.schematica.client.gui.inventorycalc.GuiInventoryCalculator;
 import com.github.lunatrius.schematica.client.util.BlockList;
 import com.github.lunatrius.schematica.client.world.SchematicWorld;
 import com.github.lunatrius.schematica.handler.ConfigurationHandler;
 import com.github.lunatrius.schematica.proxy.ClientProxy;
+import com.github.lunatrius.schematica.reference.Names;
 import jline.internal.Nullable;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -349,6 +354,42 @@ public class InventoryCalculator {
         }
 
         return ret;
+    }
+
+    public static void onRender2d () {
+        BlockList.WrappedItemStack currentStack = null;
+
+        if (ClientProxy.schematic != null) {
+            for (BlockList.WrappedItemStack stack : GuiInventoryCalculator.INSTANCE.getSortType().sort(InventoryCalculator.INSTANCE.getWrappedItemStacks())) {
+                if (stack.inventory < stack.total) {
+                    currentStack = stack;
+                    break;
+                }
+            }
+
+            // TODO: Support for material list
+
+            if (currentStack != null && Minecraft.getMinecraft().currentScreen == null) {
+                // Draw stack in the middle of the screen, im not adding options for where this is drawn.
+                ScaledResolution sr = new ScaledResolution(Minecraft.getMinecraft());
+                drawStack(currentStack, sr.getScaledWidth() / 2 - 215 / 2, 1);
+            }
+        }
+    }
+
+    private static void drawStack (BlockList.WrappedItemStack wrappedItemStack, final int x, final int y) {
+        Minecraft minecraft = Minecraft.getMinecraft();
+        final ItemStack itemStack = wrappedItemStack.itemStack;
+
+        final String itemName = wrappedItemStack.getItemStackDisplayName();
+        final String amount = wrappedItemStack.getFormattedAmount();
+        final String amountMissing = wrappedItemStack.getFormattedAmountMissing(I18n.format(Names.Gui.Control.MATERIAL_AVAILABLE), I18n.format(Names.Gui.Control.MATERIAL_AMOUNT));
+
+        GuiHelper.drawItemStackWithSlot(minecraft.renderEngine, itemStack, x, y);
+
+        minecraft.fontRenderer.drawStringWithShadow(itemName, x + 24, y + 6, 0xFFFFFF);
+        minecraft.fontRenderer.drawStringWithShadow(amount, x + 215 - minecraft.fontRenderer.getStringWidth(amount), y + 1, 0xFFFFFF);
+        minecraft.fontRenderer.drawStringWithShadow(amountMissing, x + 215 - minecraft.fontRenderer.getStringWidth(amountMissing), y + 11, 0xFFFFFF);
     }
 
     public Set<MBlockPos> getCountedBlocks() {

@@ -1,12 +1,17 @@
 package com.github.lunatrius.schematica.client.gui.inventorycalc;
 
+import com.github.lunatrius.core.client.gui.GuiHelper;
 import com.github.lunatrius.core.client.gui.GuiScreenBase;
+import com.github.lunatrius.schematica.client.gui.control.GuiSchematicMaterials;
 import com.github.lunatrius.schematica.client.inventorycalculator.InventoryCalculator;
 import com.github.lunatrius.schematica.client.util.BlockList;
+import com.github.lunatrius.schematica.proxy.ClientProxy;
 import com.github.lunatrius.schematica.reference.Names;
 import com.github.lunatrius.schematica.util.ItemStackSortType;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 
@@ -14,6 +19,8 @@ import java.io.IOException;
 import java.util.List;
 
 public class GuiInventoryCalculator extends GuiScreenBase {
+    public static GuiInventoryCalculator INSTANCE = new GuiInventoryCalculator(null);
+
     private GuiInventoryCaclulatorSlot guiInventoryCalculatorSlot;
 
     private GuiButton btnGen = null;
@@ -26,13 +33,17 @@ public class GuiInventoryCalculator extends GuiScreenBase {
 
     public GuiInventoryCalculator(final GuiScreen guiScreen) {
         super(guiScreen);
-        this.blockList = InventoryCalculator.INSTANCE.getWrappedItemStacks();
-        this.sortType.sort(this.blockList);
+
+        blockList = InventoryCalculator.INSTANCE.getWrappedItemStacks();
+        this.sortType.sort(blockList);
     }
 
     @Override
     public void initGui() {
         int id = 0;
+
+//        this.blockList = InventoryCalculator.INSTANCE.getWrappedItemStacks();
+//        this.sortType.sort(blockList);
 
         this.btnGen = new GuiButton(++id, this.width / 2 - 50, this.height - 30, 100, 20, I18n.format(Names.Gui.Control.GENERATE));
         this.buttonList.add(this.btnGen);
@@ -80,5 +91,13 @@ public class GuiInventoryCalculator extends GuiScreenBase {
     public void drawScreen(final int x, final int y, final float partialTicks) {
         this.guiInventoryCalculatorSlot.drawScreen(x, y, partialTicks);
         super.drawScreen(x, y, partialTicks);
+    }
+
+    public List<BlockList.WrappedItemStack> getBlockList() {
+        return blockList;
+    }
+
+    public ItemStackSortType getSortType() {
+        return sortType;
     }
 }

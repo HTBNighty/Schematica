@@ -38,12 +38,14 @@ public enum ItemStackSortType {
         this.comparator = comparator;
     }
 
-    public void sort(final List<BlockList.WrappedItemStack> blockList) {
+    public List<BlockList.WrappedItemStack> sort(final List<BlockList.WrappedItemStack> blockList) {
         try {
             Collections.sort(blockList, this.comparator);
         } catch (final Exception e) {
             Reference.logger.error("Could not sort the block list!", e);
         }
+
+        return blockList;
     }
 
     public ItemStackSortType next() {

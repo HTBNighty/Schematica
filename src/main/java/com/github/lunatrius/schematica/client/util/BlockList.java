@@ -154,6 +154,7 @@ public class BlockList {
         public String getFormattedAmountMissing(final String strAvailable, final String strMissing) {
             final int need = this.total - (this.inventory + this.placed);
             final int needStx = Math.abs((int) Math.ceil((this.total - this.placed) / 64.0));
+            final int needInvStx = Math.abs((int) Math.ceil((this.total - (this.placed + this.inventory)) / 64.0));
 
             // Get invStx
             int invStx = 0;
@@ -169,7 +170,7 @@ public class BlockList {
                 invStx++;
             }
 
-            String strAmount = String.format("%d (%s)", need, needStx >= 27 ? (int) Math.ceil(needStx / 27.0) + " Shlk" : needStx + " Stx");
+            String strAmount = String.format("%d (%s)", need, needInvStx >= 27 ? (int) Math.ceil(needStx / 27.0) + " Shlk" : needInvStx + " Stx");
 
             if (this.inventory == -1) { // Green when inventory is -1 (Typically when in creative)
                 return String.format("\u00a7a%s", strAmount);
@@ -178,7 +179,7 @@ public class BlockList {
             } else if (invStx == needStx && this.inventory >= need) { // Green when there are exactly enough stacks and total items in the inventory
                 return String.format("\u00a7a%s", strAmount);
             } else { // Yellow when there are too many stacks in the inventory
-                return String.format("\u00a7e%s (%d Stx)", need, Math.abs((int) Math.ceil((this.total - (this.inventory + this.placed)) / 64.0)) - invStx);
+                return String.format("\u00a7e%s (%d Stx)", need, Math.abs(needInvStx) - invStx);
             }
         }
 

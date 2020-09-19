@@ -25,6 +25,8 @@ import java.util.Formatter;
 import java.util.List;
 
 public class GuiSchematicMaterials extends GuiScreenBase {
+    public static GuiSchematicMaterials INSTANCE = new GuiSchematicMaterials(null);
+
     private GuiSchematicMaterialsSlot guiSchematicMaterialsSlot;
 
     private ItemStackSortType sortType = ItemStackSortType.fromString(ConfigurationHandler.sortType);
@@ -40,6 +42,7 @@ public class GuiSchematicMaterials extends GuiScreenBase {
 
     public GuiSchematicMaterials(final GuiScreen guiScreen) {
         super(guiScreen);
+
         final Minecraft minecraft = Minecraft.getMinecraft();
         final SchematicWorld schematic = ClientProxy.schematic;
         this.blockList = new BlockList().getList(minecraft.player, schematic, minecraft.world);
@@ -136,5 +139,13 @@ public class GuiSchematicMaterials extends GuiScreenBase {
         } catch (final Exception e) {
             Reference.logger.error("Could not dump the material list!", e);
         }
+    }
+
+    public List<BlockList.WrappedItemStack> getBlockList() {
+        return blockList;
+    }
+
+    public ItemStackSortType getSortType() {
+        return sortType;
     }
 }

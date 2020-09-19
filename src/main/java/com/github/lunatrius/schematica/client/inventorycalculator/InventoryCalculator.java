@@ -127,6 +127,11 @@ public class InventoryCalculator {
     private void floodAdd(MBlockPos pos, Map<IBlockState, Integer> targets, int openSlots) {
         IBlockState schemState = schematicWorld.getSchematic().getBlockState(pos);
 
+        if (schemState.getBlock() == Blocks.AIR) {
+            countedBlocks.add(pos);
+            return;
+        }
+
         if (!targets.containsKey(schemState)) {
             return;
         }

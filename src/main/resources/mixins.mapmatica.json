@@ -5,6 +5,7 @@
   "refmap": "mixins.mapmatica.refmap.json",
   "mixins": [
     "MixinEntityPlayerSP",
-    "MixinBlock"
+    "MixinBlock",
+    "MixinEntityRenderer"
   ]
 }

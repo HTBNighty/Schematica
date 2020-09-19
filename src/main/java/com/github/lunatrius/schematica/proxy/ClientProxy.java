@@ -125,7 +125,7 @@ public class ClientProxy extends CommonProxy {
     public static void moveSchematicToPlayer(final SchematicWorld schematic) {
         if (schematic != null) {
             final MBlockPos position = schematic.position;
-            position.y = (int) Math.floor(playerPosition.y);
+            position.y = Math.min((int) Math.floor(playerPosition.y), 256 - schematic.getHeight());
 
             if (ConfigurationHandler.autoAlign) {
                 final Minecraft mc = Minecraft.getMinecraft();

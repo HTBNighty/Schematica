@@ -179,7 +179,7 @@ public class ConfigurationHandler {
     }
 
     private static void loadConfigurationPrinter() {
-        propPlaceSpeed = configuration.get(Names.Config.Category.PRINTER, Names.Config.PLACE_SPEED, PLACE_SPEED_DEFAULT, Names.Config.PLACE_SPEED_DESC, 0, 250);
+        propPlaceSpeed = configuration.get(Names.Config.Category.PRINTER, Names.Config.PLACE_SPEED, PLACE_SPEED_DEFAULT, Names.Config.PLACE_SPEED_DESC, 0, 1000);
         propPlaceSpeed.setLanguageKey(Names.Config.LANG_PREFIX + "." + Names.Config.PLACE_SPEED);
         placeSpeed = propPlaceSpeed.getInt(PLACE_SPEED_DEFAULT);
 

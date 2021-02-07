@@ -1,17 +1,12 @@
 package com.github.lunatrius.schematica.client.gui.inventorycalc;
 
-import com.github.lunatrius.core.client.gui.GuiHelper;
 import com.github.lunatrius.core.client.gui.GuiScreenBase;
-import com.github.lunatrius.schematica.client.gui.control.GuiSchematicMaterials;
 import com.github.lunatrius.schematica.client.inventorycalculator.InventoryCalculator;
 import com.github.lunatrius.schematica.client.util.BlockList;
-import com.github.lunatrius.schematica.proxy.ClientProxy;
 import com.github.lunatrius.schematica.reference.Names;
 import com.github.lunatrius.schematica.util.ItemStackSortType;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 
@@ -73,7 +68,7 @@ public class GuiInventoryCalculator extends GuiScreenBase {
             } else if (guiButton.id == this.btnDone.id) {
                 this.mc.displayGuiScreen(null);
             } else if (guiButton.id == this.btnStop.id) {
-                InventoryCalculator.INSTANCE.setCountedBlocks(null);
+                InventoryCalculator.INSTANCE.setOptimalBlocks(null);
                 InventoryCalculator.INSTANCE.setOptimalInventory(null);
                 this.blockList.clear();
             } else {

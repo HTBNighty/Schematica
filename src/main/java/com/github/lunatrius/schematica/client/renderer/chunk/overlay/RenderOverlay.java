@@ -3,7 +3,6 @@ package com.github.lunatrius.schematica.client.renderer.chunk.overlay;
 import com.github.lunatrius.core.client.renderer.GeometryMasks;
 import com.github.lunatrius.core.client.renderer.GeometryTessellator;
 import com.github.lunatrius.core.util.math.MBlockPos;
-import com.github.lunatrius.schematica.block.state.BlockStateHelper;
 import com.github.lunatrius.schematica.client.inventorycalculator.InventoryCalculator;
 import com.github.lunatrius.schematica.client.renderer.chunk.CompiledOverlay;
 import com.github.lunatrius.schematica.client.world.SchematicWorld;
@@ -20,7 +19,6 @@ import net.minecraft.client.renderer.chunk.RenderChunk;
 import net.minecraft.client.renderer.chunk.VisGraph;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.renderer.vertex.VertexBuffer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockRenderLayer;
@@ -176,8 +174,8 @@ public class RenderOverlay extends RenderChunk {
                         }
 
 
-                        if (InventoryCalculator.INSTANCE.getCountedBlocks() != null) {
-                            if (InventoryCalculator.INSTANCE.getCountedBlocks().contains(new MBlockPos(pos))) {
+                        if (InventoryCalculator.INSTANCE.getOptimalBlocks() != null) {
+                            if (InventoryCalculator.INSTANCE.getOptimalBlocks().contains(new MBlockPos(pos))) {
                                 if (isPlaceable) {
                                    types[secX][secY][secZ] = BlockType.OPTIMAL_PLACEABLE;
                                 } else {

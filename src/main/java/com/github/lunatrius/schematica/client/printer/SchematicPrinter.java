@@ -29,12 +29,10 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.BlockFluidBase;
 
 import java.util.*;
-import java.util.concurrent.ExecutionException;
 
 public class SchematicPrinter {
     public static final SchematicPrinter INSTANCE = new SchematicPrinter();
@@ -137,8 +135,8 @@ public class SchematicPrinter {
         List<MBlockPos> blocks = new ArrayList<>();
         for (BlockPos pos : BlockPos.getAllInBox(minX, minY, minZ, maxX, maxY, maxZ)) {
             MBlockPos block = new MBlockPos(pos);
-            if (InventoryCalculator.INSTANCE.getCountedBlocks() != null) {
-                if (InventoryCalculator.INSTANCE.getCountedBlocks().contains(block)) {
+            if (InventoryCalculator.INSTANCE.getOptimalBlocks() != null) {
+                if (InventoryCalculator.INSTANCE.getOptimalBlocks().contains(block)) {
                     blocks.add(new MBlockPos(pos));
                 }
             } else {
@@ -154,9 +152,7 @@ public class SchematicPrinter {
             }
 
             try {
-                if (placeBlock(world, player, pos)) {
-                    return syncSlotAndSneaking(player, slot, isSneaking, true);
-                }
+                placeBlock(world, player, pos);
             } catch (final Exception e) {
                 Reference.logger.error("Could not place block!", e);
                 return syncSlotAndSneaking(player, slot, isSneaking, false);

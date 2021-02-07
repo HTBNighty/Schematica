@@ -48,31 +48,13 @@ compileJava {
 }
 
 minecraft {
-//    mappings = project.version_mappings
-
     mappings channel: 'snapshot', version: '20171010-1.12'
     accessTransformer = file('src/main/resources/META-INF/schematica_at.cfg')
-//    version = "${project.version_minecraft}-${project.version_forge}"
-
-//    if (project.hasProperty('version_mappings'))
-//        mappings = project.version_mappings
-
-//    if (!project.hasProperty('run_location'))
-//        runDir = 'run'
-//    else
-//        runDir = run_location.replace('{modid}', project.name).replace('{mcversion}', project.version_minecraft)
-
-//    coreMod = 'com.github.lunatrius.schematica.mixin.MixinLoader'
-//    replaceIn 'reference/Reference.java'
-//    replace '${version}', modversion
-//    replace '${mcversion}', project.version_minecraft
-//    replace '${forgeversion}', project.version_forge
 }
 
 processResources {
     // this will ensure that this task is redone when the versions change.
     inputs.property 'version', project.version
-//    inputs.property 'mcversion', project.minecraft.version
 
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'
@@ -107,9 +89,6 @@ dependencies {
     minecraft "net.minecraftforge:forge:1.12.2-14.23.5.2854"
 
     implementation fg.deobf(group: group, name: 'LunatriusCore', version: "${project.version_minecraft}-${project.version_lunatriuscore}", classifier: 'universal')
-//    apiElements fg.deobf(group: group, name: 'LunatriusCore', version: "${project.version_minecraft}-${project.version_lunatriuscore}", classifier: 'universal')
-
-//    compile group: group, name: 'LunatriusCore', version: "${project.version_minecraft}-${project.version_lunatriuscore}", classifier: 'universal'
 
     compile("org.spongepowered:mixin:0.7-SNAPSHOT") {
         exclude module: 'launchwrapper'
@@ -155,27 +134,6 @@ def commonManifest = {
             'FMLAT': project.extra_fmlat
     )
 }
-
-//jar {
-//    from sourceSets.api.output
-//    classifier = project.hasProperty('extra_classifier') ? project.extra_classifier : 'universal'
-//    manifest commonManifest
-//}
-//
-//sourceJar {
-//    from sourceSets.api.allSource
-//}
-//
-//task apiJar(dependsOn: 'classes', type: Jar) {
-//    from sourceSets.api.output
-//    classifier = 'api'
-//    manifest commonManifest
-//}
-//
-//artifacts {
-//    archives sourceJar
-//    archives apiJar
-//}
 
 if (!project.hasProperty('keystore_location'))
     ext.keystore_location = '.'
@@ -251,5 +209,3 @@ if (project.hasProperty('api_key_curseforge') && project.hasProperty('extra_curs
         }
     }
 }
-
-//build.dependsOn(shadowJar)

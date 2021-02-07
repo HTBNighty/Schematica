@@ -15,7 +15,7 @@ public abstract class MixinEntityRenderer {
     @Shadow
     Minecraft mc;
 
-    @Inject(method = "updateCameraAndRender", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiIngame;renderGameOverlay(F)V"))
+    @Inject(method = "updateCameraAndRender", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiIngame;renderGameOverlay(F)V"), remap = false)
     public void updateCameraAndRender (float partialTicks, long nanoTime, CallbackInfo callback) {
         InventoryCalculator.onRender2d();
     }

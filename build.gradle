@@ -16,27 +16,26 @@ buildscript {
         }
         maven {
             name = 'SpongePowered'
-            url = 'http://repo.spongepowered.org/maven'
+            url = 'https://repo.spongepowered.org/repository/maven-public/'
         }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
-        classpath 'org.spongepowered:mixingradle:0.6-SNAPSHOT'
+        classpath 'net.minecraftforge.gradle:ForgeGradle:3.+'
+        classpath 'org.spongepowered:mixingradle:0.7-SNAPSHOT'
         classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.3'
         classpath 'gradle.plugin.com.matthewprenger:CurseGradle:1.0.9'
     }
 }
 
-apply plugin: 'net.minecraftforge.gradle.forge'
-apply plugin: 'com.matthewprenger.cursegradle'
+apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'org.spongepowered.mixin'
+apply plugin: 'com.matthewprenger.cursegradle'
 apply plugin: 'com.github.johnrengelman.shadow'
 
-//ext.build = System.getenv().BUILD_NUMBER ?: 'git'
-ext.modversion = "1.2"
+ext.modversion = "2.0"
 
 group = 'com.github.lunatrius'
-version = "1.2"
+version = "2.0"
 
 sourceCompatibility = '1.8'
 targetCompatibility = '1.8'
@@ -49,27 +48,31 @@ compileJava {
 }
 
 minecraft {
-    version = "${project.version_minecraft}-${project.version_forge}"
+//    mappings = project.version_mappings
 
-    if (project.hasProperty('version_mappings'))
-        mappings = project.version_mappings
+    mappings channel: 'snapshot', version: '20171010-1.12'
+    accessTransformer = file('src/main/resources/META-INF/schematica_at.cfg')
+//    version = "${project.version_minecraft}-${project.version_forge}"
 
-    if (!project.hasProperty('run_location'))
-        runDir = 'run'
-    else
-        runDir = run_location.replace('{modid}', project.name).replace('{mcversion}', project.version_minecraft)
+//    if (project.hasProperty('version_mappings'))
+//        mappings = project.version_mappings
 
-    coreMod = 'com.github.lunatrius.schematica.mixin.MixinLoader'
-    replaceIn 'reference/Reference.java'
-    replace '${version}', modversion
-    replace '${mcversion}', project.version_minecraft
-    replace '${forgeversion}', project.version_forge
+//    if (!project.hasProperty('run_location'))
+//        runDir = 'run'
+//    else
+//        runDir = run_location.replace('{modid}', project.name).replace('{mcversion}', project.version_minecraft)
+
+//    coreMod = 'com.github.lunatrius.schematica.mixin.MixinLoader'
+//    replaceIn 'reference/Reference.java'
+//    replace '${version}', modversion
+//    replace '${mcversion}', project.version_minecraft
+//    replace '${forgeversion}', project.version_forge
 }
 
 processResources {
     // this will ensure that this task is redone when the versions change.
     inputs.property 'version', project.version
-    inputs.property 'mcversion', project.minecraft.version
+//    inputs.property 'mcversion', project.minecraft.version
 
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'
@@ -96,14 +99,19 @@ repositories {
     }
     maven {
         name = 'spongepowered-repo'
-        url = 'http://repo.spongepowered.org/maven/'
+        url = 'https://repo.spongepowered.org/repository/maven-public/'
     }
 }
 
 dependencies {
-    deobfCompile group: group, name: 'LunatriusCore', version: "${project.version_minecraft}-${project.version_lunatriuscore}", classifier: 'universal'
+    minecraft "net.minecraftforge:forge:1.12.2-14.23.5.2854"
 
-    compile("org.spongepowered:mixin:0.7.4-SNAPSHOT") {
+    implementation fg.deobf(group: group, name: 'LunatriusCore', version: "${project.version_minecraft}-${project.version_lunatriuscore}", classifier: 'universal')
+//    apiElements fg.deobf(group: group, name: 'LunatriusCore', version: "${project.version_minecraft}-${project.version_lunatriuscore}", classifier: 'universal')
+
+//    compile group: group, name: 'LunatriusCore', version: "${project.version_minecraft}-${project.version_lunatriuscore}", classifier: 'universal'
+
+    compile("org.spongepowered:mixin:0.7-SNAPSHOT") {
         exclude module: 'launchwrapper'
         exclude module: 'guava'
         exclude module: 'commons-io'
@@ -125,13 +133,13 @@ shadowJar {
 }
 
 mixin {
-    defaultObfuscationEnv searge
+    defaultObfuscationEnv "searge"
     add sourceSets.main, 'mixins.mapmatica.refmap.json'
 }
 
 reobf {
     shadowJar {
-        mappingType = 'SEARGE'
+//        mappingType = 'SEARGE'
         classpath = sourceSets.main.compileClasspath
     }
 }
@@ -148,26 +156,26 @@ def commonManifest = {
     )
 }
 
-jar {
-    from sourceSets.api.output
-    classifier = project.hasProperty('extra_classifier') ? project.extra_classifier : 'universal'
-    manifest commonManifest
-}
-
-sourceJar {
-    from sourceSets.api.allSource
-}
-
-task apiJar(dependsOn: 'classes', type: Jar) {
-    from sourceSets.api.output
-    classifier = 'api'
-    manifest commonManifest
-}
-
-artifacts {
-    archives sourceJar
-    archives apiJar
-}
+//jar {
+//    from sourceSets.api.output
+//    classifier = project.hasProperty('extra_classifier') ? project.extra_classifier : 'universal'
+//    manifest commonManifest
+//}
+//
+//sourceJar {
+//    from sourceSets.api.allSource
+//}
+//
+//task apiJar(dependsOn: 'classes', type: Jar) {
+//    from sourceSets.api.output
+//    classifier = 'api'
+//    manifest commonManifest
+//}
+//
+//artifacts {
+//    archives sourceJar
+//    archives apiJar
+//}
 
 if (!project.hasProperty('keystore_location'))
     ext.keystore_location = '.'

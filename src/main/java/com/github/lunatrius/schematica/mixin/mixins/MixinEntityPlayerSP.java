@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(EntityPlayerSP.class)
 public abstract class MixinEntityPlayerSP {
-    @Inject(method = "onUpdateWalkingPlayer", at = @At("HEAD"), cancellable = true, remap = false)
+    @Inject(method = "onUpdateWalkingPlayer", at = @At("HEAD"), cancellable = true)
     public void onUpdateWalkingPlayerPRE (CallbackInfo callback) {
         TickHandler.INSTANCE.onUpdateWalkingPlayer(); // TODO: Get an actual event system working
     }

@@ -22,7 +22,7 @@ buildscript {
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:3.+'
         classpath 'org.spongepowered:mixingradle:0.7-SNAPSHOT'
-        classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.3'
+        classpath 'com.github.jengelman.gradle.plugins:shadow:4.0.4'
         classpath 'gradle.plugin.com.matthewprenger:CurseGradle:1.0.9'
     }
 }
@@ -50,6 +50,19 @@ compileJava {
 minecraft {
     mappings channel: 'snapshot', version: '20171010-1.12'
     accessTransformer = file('src/main/resources/META-INF/schematica_at.cfg')
+
+    // Credit: Kami Blue
+    runs {
+        client {
+            workingDirectory project.file('run')
+
+            property 'fml.coreMods.load', 'com.github.lunatrius.schematica.mixin.MixinLoader'
+            property 'mixin.env.disableRefMap', 'true' // Disable refmap so we don't get trolled by Baritone
+
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            property 'forge.logging.console.level', 'debug'
+        }
+    }
 }
 
 processResources {
@@ -90,10 +103,16 @@ dependencies {
 
     implementation fg.deobf(group: group, name: 'LunatriusCore', version: "${project.version_minecraft}-${project.version_lunatriuscore}", classifier: 'universal')
 
-    compile("org.spongepowered:mixin:0.7-SNAPSHOT") {
-        exclude module: 'launchwrapper'
-        exclude module: 'guava'
+    implementation ('org.spongepowered:mixin:0.7.11-SNAPSHOT') {
         exclude module: 'commons-io'
+        exclude module: 'gson'
+        exclude module: 'guava'
+        exclude module: 'launchwrapper'
+        exclude module: 'log4j-core'
+    }
+
+    // Credit: Kami Blue
+    annotationProcessor('org.spongepowered:mixin:0.8.2:processor') {
         exclude module: 'gson'
     }
 }
@@ -118,94 +137,23 @@ mixin {
 
 reobf {
     shadowJar {
-//        mappingType = 'SEARGE'
         classpath = sourceSets.main.compileClasspath
     }
 }
 
-def commonManifest = {
-    attributes(
-            'MixinConfigs': 'mixins.mapmatica.json',
-            'TweakClass': 'org.spongepowered.asm.launch.MixinTweaker',
-            'TweakOrder': 0,
-            'FMLCorePluginContainsFMLMod': 'true',
-            'FMLCorePlugin': 'com.github.lunatrius.schematica.mixin.MixinLoader',
-            'ForceLoadAsMod': 'true',
-            'FMLAT': project.extra_fmlat
-    )
-}
-
-if (!project.hasProperty('keystore_location'))
-    ext.keystore_location = '.'
-
-if (!project.hasProperty('keystore_alias'))
-    ext.keystore_alias = ''
-
-if (!project.hasProperty('keystore_password'))
-    ext.keystore_password = ''
-
-task signJars(dependsOn: ['reobfJar', 'sourceJar', 'apiJar']) {
-    inputs.dir jar.destinationDir
-    inputs.file keystore_location
-    inputs.property 'keystore_alias', keystore_alias
-    inputs.property 'keystore_password', keystore_password
-    outputs.dir jar.destinationDir
-
-    onlyIf {
-        return keystore_location != '.'
-    }
-
-    doLast {
-        jar.destinationDir.eachFile { file ->
-            if (!file.getPath().endsWith('.jar'))
-                return;
-
-            logger.lifecycle "signing ${file}"
-            ant.signjar(
-                    destDir: file.getParentFile(),
-                    jar: file,
-                    keystore: keystore_location,
-                    alias: keystore_alias,
-                    storepass: keystore_password
-            )
-        }
+jar {
+    manifest {
+        attributes(
+                'Manifest-Version': 1.0,
+                'MixinConfigs': 'mixins.mapmatica.json',
+                'TweakClass': 'org.spongepowered.asm.launch.MixinTweaker',
+                'TweakOrder': 0,
+                'FMLCorePluginContainsFMLMod': 'true',
+                'FMLCorePlugin': 'com.github.lunatrius.schematica.mixin.MixinLoader',
+                'ForceLoadAsMod': 'true',
+                'FMLAT': 'schematica_at.cfg'
+        )
     }
 }
 
-if (!project.hasProperty('release_location'))
-    ext.release_location = '.'
-else
-    ext.release_location = release_location.replace('{modid}', project.name).replace('{mcversion}', project.version_minecraft).replace('{version}', version)
-
-task release(dependsOn: 'signJars', type: Copy) {
-    from project.tasks.jar.destinationDir
-    into project.file(project.release_location)
-
-    eachFile { file ->
-        logger.lifecycle "copying ${file}"
-    }
-
-    onlyIf {
-        return project.release_location != '.'
-    }
-}
-
-if (project.hasProperty('api_key_curseforge') && project.hasProperty('extra_curseforge_id')) {
-    tasks.curseforge.dependsOn signJars
-    curseforge {
-        apiKey = project.api_key_curseforge
-
-        project {
-            id = project.extra_curseforge_id
-            changelog = ''
-            releaseType = project.hasProperty('extra_curseforge_releasetype') ? project.extra_curseforge_releasetype : 'release'
-
-            addArtifact sourceJar
-            addArtifact apiJar
-
-            relations {
-                requiredLibrary 'lunatriuscore'
-            }
-        }
-    }
-}
+build.dependsOn(shadowJar)

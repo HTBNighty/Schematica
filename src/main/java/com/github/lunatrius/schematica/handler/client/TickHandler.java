@@ -68,7 +68,7 @@ public class TickHandler {
             this.minecraft.mcProfiler.startSection("printer");
 
             // Make sure the time passed since the last place is greater than 1 second divided by the blocks placed per second
-            if (System.nanoTime() - lastPlaceTime >= 1000000000L / ConfigurationHandler.placeSpeed) {
+            if ((ConfigurationHandler.placeSpeed == 0) || (System.nanoTime() - lastPlaceTime >= 1000000000L / ConfigurationHandler.placeSpeed)) {
                 this.lastPlaceTime = System.nanoTime();
 
                 printer.print(world, player);

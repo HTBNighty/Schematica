@@ -31,7 +31,7 @@ public final class Names {
         public static final String RENDER_DISTANCE_DESC = "Schematic render distance.";
 
         public static final String PLACE_SPEED = "placeSpeed";
-        public static final String PLACE_SPEED_DESC = "How fast to place blocks (in bps).";
+        public static final String PLACE_SPEED_DESC = "How fast to place blocks (in bps). 0 for unlimited.";
         public static final String BREAK_PAUSE = "breakPause";
         public static final String BREAK_PAUSE_DESC = "How long in ms printer should stop for after breaking a block";
         public static final String SWAP_DELAY = "swapDelay";

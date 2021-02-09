@@ -1,72 +1,30 @@
-## Welcome to Schematica!
-### Compiling
-[Setup Java](#setup-java)
+#Mapmatica
+Mapmatica is an open source fork of the mod Schematica. Mapmatica is made specifically to make the task of making mapart easier.<br>
+[![Discord](https://img.shields.io/discord/740716348342009925?color=blue&label=Discord&logo=discord)](https://discord.gg/QpNYBu2RgG)
 
-[Setup Git](#setup-git)
+###Features:<br>
+*Printer:*
+- Unlimited place speed
+- Better block place order
+- Break and swap delay options that help to prevent ghost blocks and misplaced blocks
+- Prevent printer from placing the noobline on your map
+- Completely eliminate ghost blocks
 
-[Setup Schematica](#setup-schematica)
+*Render:*
+- Blocks that you have in your inventory are rendered with a separate color
+- Blocks that you can currently place are rendered with a separate color
+- Fully customizable block overlay colors
 
-[Compile Schematica](#compile-schematica)
+*Misc:*
+- Material lists account for how many items are in your inventory
+- Material lists show how many stacks of items are needed rather than how many items
+- Automaically align your schematic to the world’s map grid, preventing you from having to make your map before building
+- Manual material list generation, meaning you can leave your map and still see what materials you need
 
-[Updating Your Repository](#updating-your-repository)
+**All new:** 
+*Inventory Calculator:*<br> 
+The Inventory Calculator is a feature that tells the will help you know exactly what to bring to your map, preventing you from having to guess what blocks you should bring. This allows for more efficient building, as when you pickup your items you will be sure you are not wasting inventory space.
 
-#### Setup Java
-The Java JDK is used to compile Schematica.
+Simply open the Inventory Calculator menu and click the calculate button with your schematic loaded and an optimal inventory will be calculated for you. Your HUD will show you what items you need to pick up from your stash without having to open the menu again. 
 
-1. Download and install the Java JDK.
-    * [Windows/Mac download link](http://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html). Scroll down, accept the `Oracle Binary Code License Agreement for Java SE`, and download it (if you have a 64-bit OS, please download the 64-bit version).
-    * Linux: Installation methods for certain popular flavors of Linux are listed below. If your distribution is not listed, follow the instructions specific to your package manager or install it manually [here](http://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html).
-        * Gentoo: `emerge dev-java/oracle-jdk-bin`
-        * Archlinux: `pacman -S jdk7-openjdk`
-        * Ubuntu/Debian: `apt-get install openjdk-7-jdk`
-        * Fedora: `yum install java-1.7.0-openjdk`
-2. Set up the environment.
-    * Windows: Set environment variables for the JDK.
-        1. Go to `Control Panel\System and Security\System`, and click on `Advanced System Settings` on the left-hand side.
-        2. Click on `Environment Variables`.
-        3. Under `System Variables`, click `New`.
-        4. For `Variable Name`, input `JAVA_HOME`.
-        5. For `Variable Value`, input something similar to `C:\Program Files\Java\jdk1.7.0_45` exactly as shown (or wherever your Java JDK installation is), and click `Ok`.
-        6. Scroll down to a variable named `Path`, and double-click on it.
-        7. Append `;%JAVA_HOME%\bin` EXACTLY AS SHOWN and click `Ok`. Make sure the location is correct; double-check just to make sure.
-3. Open up your command line and run `javac`. If it spews out a bunch of possible options and the usage, then you're good to go. If not try the steps again.
-
-#### Setup Git
-Git is used to clone Schematica and update your local copy.
-
-1. Download and install Git [here](http://git-scm.com/download/).
-2. *Optional* Download and install a Git GUI client, such as Github for Windows/Mac, SmartGitHg, TortoiseGit, etc. A nice list is available [here](http://git-scm.com/downloads/guis).
-
-#### Setup Schematica
-This section assumes that you're using the command-line version of Git.
-
-1. Open up your command line.
-2. Navigate to a place where you want to download Schematica's source (eg `C:\Development\Github\Minecraft\`) by executing `cd [folder location]`. This location is known as `mcdev` from now on.
-3. Execute `git clone git@github.com:Lunatrius/Schematica.git`. This will download Schematica's source into `mcdev`.
-4. Right now, you should have a directory that looks something like:
-
-***
-    mcdev
-    \-Schematica
-        \-Schematica's files (should have build.gradle)
-***
-
-#### Compile Schematica
-1. Execute `gradlew setupDevWorkspace`. This sets up Forge and downloads the necessary libraries to build Schematica. This might take some time, be patient.
-    * You will generally only have to do this once until the Forge version in `gradle.properties` changes.
-2. Execute `gradlew build`. If you did everything right, `BUILD SUCCESSFUL` will be displayed after it finishes. This should be relatively quick.
-    * If you see `BUILD FAILED`, check the error output (it should be right around `BUILD FAILED`), fix everything (if possible), and try again.
-3. Go to `mcdev\Schematica\build\libs`.
-    * You should see a `.jar` file named `Schematica-#.#.#-#.#.#.#-universal.jar`.
-4. Copy the jar into your Minecraft mods folder, and you are done!
-
-#### Updating Your Repository
-In order to get the most up-to-date builds, you'll have to periodically update your local repository.
-
-1. Open up your command line.
-2. Navigate to `mcdev` in the console.
-3. Make sure you have not made any changes to the local repository, or else there might be issues with Git.
-    * If you have, try reverting them to the status that they were when you last updated your repository.
-4. Execute `git pull master`. This pulls all commits from the official repository that do not yet exist on your local repository and updates it.
-
-Shamelessly based this README off [pahimar's version](https://github.com/pahimar/Equivalent-Exchange-3).
+As long as you have an optimal inventory set, your printer will be limited to only being able to place in the are chosen by the Inventory Calculator. Your block highlights will also show a unique color for if a block is included in your current optimal inventory.

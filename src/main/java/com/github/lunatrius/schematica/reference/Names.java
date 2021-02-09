@@ -49,7 +49,9 @@ public final class Names {
         public static final String PLACE_ADJACENT = "placeAdjacent";
         public static final String PLACE_ADJACENT_DESC = "Place blocks only if there is an adjacent block next to them.";
         public static final String PRINT_NOOBLINE = "printNoobline";
-        public static final String PRINT_NOOBLINE_DESC = "If printer should place blocks on the noobline";
+        public static final String PRINT_NOOBLINE_DESC = "If printer should place blocks on the noobline.";
+        public static final String NO_GHOST_BLOCKS = "noGhostBlocks";
+        public static final String NO_GHOST_BLOCKS_DESC = "If the client should wait for a response from the server before changing a block.";
         public static final String SWAP_SLOT = "swapSlot";
         public static final String SWAP_SLOT_DESC = "Allow the printer to use this hotbar slot.";
 

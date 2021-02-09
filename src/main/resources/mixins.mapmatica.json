@@ -6,6 +6,7 @@
   "mixins": [
     "MixinEntityPlayerSP",
     "MixinBlock",
-    "MixinEntityRenderer"
+    "MixinEntityRenderer",
+    "MixinWorld"
   ]
 }

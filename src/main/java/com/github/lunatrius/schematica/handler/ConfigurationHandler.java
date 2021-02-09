@@ -11,6 +11,7 @@ import net.minecraftforge.common.config.Property;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayDeque;
@@ -34,6 +35,16 @@ public class ConfigurationHandler {
     public static final boolean HIGHLIGHT_AIR_DEFAULT = true;
     public static final double BLOCK_DELTA_DEFAULT = 0.005;
     public static final int RENDER_DISTANCE_DEFAULT = 8;
+
+    public static final String EXTRA_BLOCK_DEFAULT = "0x1FBF00BF";
+    public static final String WRONG_BLOCK_DEFAULT = "0x1FFF0000";
+    public static final String WRONG_META_DEFAULT = "0x1FBF5F00";
+    public static final String MISSING_BLOCK_DEFAULT = "0x1F00BFFF";
+    public static final String IN_INVENTORY_DEFAULT = "0x3F00FFC8";
+    public static final String PLACEABLE_DEFAULT = "0x4A00FF00";
+    public static final String OPTIMAL_DEFAULT = "0x3FD883FC";
+    public static final String OPTIMAL_PLACEABLE_DEFAULT = "0x4A9D00E0";
+
     public static final int PLACE_SPEED_DEFAULT = 20;
     public static final int BREAK_PAUSE_DEFAULT = 25;
     public static final int SWAP_DELAY_DEFAULT = 5;
@@ -67,6 +78,14 @@ public class ConfigurationHandler {
     public static boolean highlightAir = HIGHLIGHT_AIR_DEFAULT;
     public static double blockDelta = BLOCK_DELTA_DEFAULT;
     public static int renderDistance = RENDER_DISTANCE_DEFAULT;
+    public static String extraBlockColor = EXTRA_BLOCK_DEFAULT;
+    public static String wrongBlockColor = WRONG_BLOCK_DEFAULT;
+    public static String wrongMetaColor = WRONG_META_DEFAULT;
+    public static String missingBlockColor = MISSING_BLOCK_DEFAULT;
+    public static String inInvColor = IN_INVENTORY_DEFAULT;
+    public static String placeableBlockColor = PLACEABLE_DEFAULT;
+    public static String optimalBlockColor = OPTIMAL_DEFAULT;
+    public static String optimalPlaceableColor = OPTIMAL_PLACEABLE_DEFAULT;
     public static int placeSpeed = PLACE_SPEED_DEFAULT;
     public static int breakPause = BREAK_PAUSE_DEFAULT;
     public static int swapDelay = SWAP_DELAY_DEFAULT;
@@ -98,6 +117,14 @@ public class ConfigurationHandler {
     public static Property propHighlightAir = null;
     public static Property propBlockDelta = null;
     public static Property propRenderDistance = null;
+    public static Property propExtraBlockColor = null;
+    public static Property propWrongBlockColor = null;
+    public static Property propWrongMetaColor = null;
+    public static Property propMissingBlockColor = null;
+    public static Property propInInvColor = null;
+    public static Property propPlaceableBlockColor = null;
+    public static Property propOptimalBlockColor = null;
+    public static Property propOptimalPlaceableColor = null;
     public static Property propPlaceSpeed = null;
     public static Property propBreakPause = null;
     public static Property propSwapDelay = null;
@@ -179,6 +206,38 @@ public class ConfigurationHandler {
         propRenderDistance = configuration.get(Names.Config.Category.RENDER, Names.Config.RENDER_DISTANCE, RENDER_DISTANCE_DEFAULT, Names.Config.RENDER_DISTANCE_DESC, 2, 16);
         propRenderDistance.setLanguageKey(Names.Config.LANG_PREFIX + "." + Names.Config.RENDER_DISTANCE);
         renderDistance = propRenderDistance.getInt(RENDER_DISTANCE_DEFAULT);
+
+        propExtraBlockColor = configuration.get(Names.Config.Category.RENDER, Names.Config.EXTRA_BLOCK, EXTRA_BLOCK_DEFAULT, Names.Config.EXTRA_BLOCK_DESC, Property.Type.COLOR);
+        propExtraBlockColor.setLanguageKey(Names.Config.LANG_PREFIX + "." + Names.Config.EXTRA_BLOCK);
+        extraBlockColor = propExtraBlockColor.getString();
+
+        propWrongBlockColor = configuration.get(Names.Config.Category.RENDER, Names.Config.WRONG_BLOCK, WRONG_BLOCK_DEFAULT, Names.Config.WRONG_BLOCK_DESC, Property.Type.COLOR);
+        propWrongBlockColor.setLanguageKey(Names.Config.LANG_PREFIX + "." + Names.Config.WRONG_BLOCK);
+        wrongBlockColor = propWrongBlockColor.getString();
+
+        propWrongMetaColor = configuration.get(Names.Config.Category.RENDER, Names.Config.WRONG_META, WRONG_META_DEFAULT, Names.Config.WRONG_META_DESC, Property.Type.COLOR);
+        propWrongMetaColor.setLanguageKey(Names.Config.LANG_PREFIX + "." + Names.Config.WRONG_META);
+        wrongMetaColor = propWrongMetaColor.getString();
+
+        propMissingBlockColor = configuration.get(Names.Config.Category.RENDER, Names.Config.MISSING_BLOCK, MISSING_BLOCK_DEFAULT, Names.Config.MISSING_BLOCK_DESC, Property.Type.COLOR);
+        propMissingBlockColor.setLanguageKey(Names.Config.LANG_PREFIX + "." + Names.Config.MISSING_BLOCK);
+        missingBlockColor = propMissingBlockColor.getString();
+
+        propInInvColor = configuration.get(Names.Config.Category.RENDER, Names.Config.IN_INVENTORY, IN_INVENTORY_DEFAULT, Names.Config.IN_INVENTORY_DESC, Property.Type.COLOR);
+        propInInvColor.setLanguageKey(Names.Config.LANG_PREFIX + "." + Names.Config.IN_INVENTORY);
+        inInvColor = propInInvColor.getString();
+
+        propPlaceableBlockColor = configuration.get(Names.Config.Category.RENDER, Names.Config.PLACEABLE, PLACEABLE_DEFAULT, Names.Config.PLACEABLE_DESC, Property.Type.COLOR);
+        propPlaceableBlockColor.setLanguageKey(Names.Config.LANG_PREFIX + "." + Names.Config.PLACEABLE);
+        placeableBlockColor = propPlaceableBlockColor.getString();
+
+        propOptimalBlockColor = configuration.get(Names.Config.Category.RENDER, Names.Config.OPTIMAL, OPTIMAL_DEFAULT, Names.Config.OPTIMAL_DESC, Property.Type.COLOR);
+        propOptimalBlockColor.setLanguageKey(Names.Config.LANG_PREFIX + "." + Names.Config.OPTIMAL);
+        optimalBlockColor = propOptimalBlockColor.getString();
+
+        propOptimalPlaceableColor = configuration.get(Names.Config.Category.RENDER, Names.Config.OPTIMAL_PLACEABLE, OPTIMAL_PLACEABLE_DEFAULT, Names.Config.OPTIMAL_PLACEABLE_DESC, Property.Type.COLOR);
+        propOptimalPlaceableColor.setLanguageKey(Names.Config.LANG_PREFIX + "." + Names.Config.OPTIMAL_PLACEABLE);
+        optimalPlaceableColor = propOptimalPlaceableColor.getString();
     }
 
     private static void loadConfigurationPrinter() {

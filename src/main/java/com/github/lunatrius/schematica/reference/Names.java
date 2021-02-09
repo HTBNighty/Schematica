@@ -29,6 +29,22 @@ public final class Names {
         public static final String BLOCK_DELTA_DESC = "Delta value used for highlighting (if you experience z-fighting increase this).";
         public static final String RENDER_DISTANCE = "renderDistance";
         public static final String RENDER_DISTANCE_DESC = "Schematic render distance.";
+        public static final String EXTRA_BLOCK = "extraBlockColor";
+        public static final String EXTRA_BLOCK_DESC = "A block that is present in the world but not the schematic";
+        public static final String WRONG_BLOCK = "wrongBlockColor";
+        public static final String WRONG_BLOCK_DESC = "A mismatch between the block in the world and the schematic";
+        public static final String WRONG_META = "wrongMetaColor";
+        public static final String WRONG_META_DESC = "A mismatch between the metadata for the block in the world and the schematic";
+        public static final String MISSING_BLOCK = "missingBlockColor";
+        public static final String MISSING_BLOCK_DESC = "A block that is present in the schematic but not in the world";
+        public static final String IN_INVENTORY = "inInvColor";
+        public static final String IN_INVENTORY_DESC = "A block that is in the player's inventory";
+        public static final String PLACEABLE = "placeableBlockColor";
+        public static final String PLACEABLE_DESC = "A block that is placeable and in the player's inventory";
+        public static final String OPTIMAL = "optimalBlockColor";
+        public static final String OPTIMAL_DESC = "A block that is in the current optimal inventory";
+        public static final String OPTIMAL_PLACEABLE = "optimalPlaceableColor";
+        public static final String OPTIMAL_PLACEABLE_DESC = "A block that is in the current optimal inventory and is placeable and is in the players inventory";
 
         public static final String PLACE_SPEED = "placeSpeed";
         public static final String PLACE_SPEED_DESC = "How fast to place blocks (in bps). 0 for unlimited.";

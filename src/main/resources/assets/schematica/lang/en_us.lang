@@ -81,6 +81,22 @@ schematica.config.blockDelta=Block Delta
 schematica.config.blockDelta.tooltip=Delta value used for highlighting (if you experience z-fighting increase this).
 schematica.config.renderDistance=Render Distance
 schematica.config.renderDistance.tooltip=Schematic render distance.
+schematica.config.extraBlockColor=Extra Block Color
+schematica.config.extraBlockColor.tooltip=A block that is present in the world but not the schematic
+schematica.config.wrongBlockColor=Wrong Block Color
+schematica.config.wrongBlockColor.tooltip=A mismatch between the block in the world and the schematic
+schematica.config.wrongMetaColor=Wrong Meta Color
+schematica.config.wrongMetaColor.tooltip=A mismatch between the metadata for the block in the world and the schematic
+schematica.config.missingBlockColor=Missing Block Color
+schematica.config.missingBlockColor.tooltip=A block that is present in the schematic but not in the world
+schematica.config.inInvColor=In Inv Color
+schematica.config.inInvColor.tooltip=A block that is in the player's inventory
+schematica.config.placeableBlockColor=Placeable Block Color
+schematica.config.placeableBlockColor.tooltip=A block that is placeable and in the player's inventory
+schematica.config.optimalBlockColor=Optimal Block Color
+schematica.config.optimalBlockColor.tooltip=A block that is in the current optimal inventory
+schematica.config.optimalPlaceableColor=Optimal Placeable Color
+schematica.config.optimalPlaceableColor.tooltip=A block that is in the current optimal inventory and is placeable and is in the players inventory
 
 # gui - config - printer
 schematica.config.placeDelay=Placement Delay

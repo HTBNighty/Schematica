@@ -28,32 +28,9 @@ import net.minecraft.world.ChunkCache;
 import net.minecraft.world.World;
 import org.lwjgl.opengl.GL11;
 
+import java.awt.*;
+
 public class RenderOverlay extends RenderChunk {
-    private static enum BlockType {
-        /** Purple - a block that is present in the world but not the schematic */
-        EXTRA_BLOCK(0x1FBF00BF),
-        /** Red - a mismatch between the block in the world and the schematic */
-        WRONG_BLOCK(0x1FFF0000),
-        /** Orange - a mismatch between the metadata for the block in the world and the schematic */
-        WRONG_META(0x1FBF5F00),
-        /** Blue - a block that is present in the schematic but not in the world */
-        MISSING_BLOCK(0x1F00BFFF),
-        /** Teal - a block that is in the player's inventory */
-        IN_INVENTORY(0x3F00FFC8),
-        /** Green - a block that is placeable and in the player's inventory */
-        PLACEABLE(0x4A00FF00),
-        /** Pink - a block that is in the current optimal inventory */
-        OPTIMAL(0x3FD883FC),
-        /** Purple - a block that is in the current optimal inventory and is placeable */
-        OPTIMAL_PLACEABLE(0x4A9D00E0);
-
-        public final int color;
-
-        private BlockType(int color) {
-            this.color = color;
-        }
-    }
-
     private final VertexBuffer vertexBuffer;
 
     public RenderOverlay(final World world, final RenderGlobal renderGlobal, final int index) {
@@ -107,7 +84,7 @@ public class RenderOverlay extends RenderChunk {
 
             // Elements in this array may be null, indicating that nothing should be rendered (or out of bounds)
             // 18 elements to provide padding on both sides (this padding is not rendered).
-            final BlockType[][][] types = new BlockType[18][18][18];
+            final int[][][] types = new int[18][18][18];
 
             // Build the type array (including the padding)
             BlockPos.MutableBlockPos mcPos = new BlockPos.MutableBlockPos();
@@ -136,13 +113,13 @@ public class RenderOverlay extends RenderChunk {
                 final boolean isMcAirBlock = mcWorld.isAirBlock(mcPos) || ConfigurationHandler.isExtraAirBlock(mcBlock);
 
                 if (ConfigurationHandler.highlightAir && !isMcAirBlock && isSchAirBlock) {
-                    types[secX][secY][secZ] = BlockType.EXTRA_BLOCK;
+                    types[secX][secY][secZ] = getColor(ConfigurationHandler.extraBlockColor, ConfigurationHandler.EXTRA_BLOCK_DEFAULT).getRGB();
                 } else if (ConfigurationHandler.highlight) {
                     if (!isMcAirBlock) {
                         if (schBlock != mcBlock) {
-                            types[secX][secY][secZ] = BlockType.WRONG_BLOCK;
+                            types[secX][secY][secZ] = getColor(ConfigurationHandler.wrongBlockColor, ConfigurationHandler.WRONG_BLOCK_DEFAULT).getRGB();
                         } else if (schBlock.getMetaFromState(schBlockState) != mcBlock.getMetaFromState(mcBlockState)) {
-                            types[secX][secY][secZ] = BlockType.WRONG_META;
+                            types[secX][secY][secZ] = getColor(ConfigurationHandler.wrongMetaColor, ConfigurationHandler.WRONG_META_DEFAULT).getRGB();
                         }
                     } else if (!isSchAirBlock) {
                         boolean isInInventory = false;
@@ -177,21 +154,21 @@ public class RenderOverlay extends RenderChunk {
                         if (InventoryCalculator.INSTANCE.getOptimalBlocks() != null) {
                             if (InventoryCalculator.INSTANCE.getOptimalBlocks().contains(new MBlockPos(pos))) {
                                 if (isPlaceable) {
-                                   types[secX][secY][secZ] = BlockType.OPTIMAL_PLACEABLE;
+                                   types[secX][secY][secZ] = getColor(ConfigurationHandler.optimalPlaceableColor, ConfigurationHandler.OPTIMAL_PLACEABLE_DEFAULT).getRGB();
                                 } else {
-                                   types[secX][secY][secZ] = BlockType.OPTIMAL;
+                                   types[secX][secY][secZ] = getColor(ConfigurationHandler.optimalBlockColor, ConfigurationHandler.OPTIMAL_DEFAULT).getRGB();
                                 }
                             } else {
-                                types[secX][secY][secZ] = BlockType.MISSING_BLOCK;
+                                types[secX][secY][secZ] = getColor(ConfigurationHandler.missingBlockColor, ConfigurationHandler.MISSING_BLOCK_DEFAULT).getRGB();
                             }
 
                         } else {
                             if (isPlaceable) {
-                                types[secX][secY][secZ] = BlockType.PLACEABLE;
+                                types[secX][secY][secZ] = getColor(ConfigurationHandler.placeableBlockColor, ConfigurationHandler.PLACEABLE_DEFAULT).getRGB();
                             } else if (isInInventory) {
-                                types[secX][secY][secZ] = BlockType.IN_INVENTORY;
+                                types[secX][secY][secZ] = getColor(ConfigurationHandler.inInvColor, ConfigurationHandler.IN_INVENTORY_DEFAULT).getRGB();
                             } else {
-                                types[secX][secY][secZ] = BlockType.MISSING_BLOCK;
+                                types[secX][secY][secZ] = getColor(ConfigurationHandler.missingBlockColor, ConfigurationHandler.MISSING_BLOCK_DEFAULT).getRGB();
                             }
                         }
                     }
@@ -204,16 +181,17 @@ public class RenderOverlay extends RenderChunk {
                 int secY = pos.getY() - fromEx.getY();
                 int secZ = pos.getZ() - fromEx.getZ();
 
-                BlockType type = types[secX][secY][secZ];
+                int type = 0;
+                type = types[secX][secY][secZ];
 
-                if (type != null) {
+                if (type != 0) {
                     if (!compiledOverlay.isLayerStarted(layer)) {
                         compiledOverlay.setLayerStarted(layer);
                         preRenderBlocks(buffer, from);
                     }
 
                     int sides = getSides(types, secX, secY, secZ);
-                    GeometryTessellator.drawCuboid(buffer, pos, sides, type.color);
+                    GeometryTessellator.drawCuboid(buffer, pos, sides, type);
                     compiledOverlay.setLayerUsed(layer);
                 }
             }
@@ -226,7 +204,7 @@ public class RenderOverlay extends RenderChunk {
         compiledOverlay.setVisibility(visgraph.computeVisibility());
     }
 
-    private int getSides(final BlockType[][][] types, final int x, final int y, final int z) {
+    private int getSides(final int[][][] types, final int x, final int y, final int z) {
         // The padding cannot be rendered (it lacks neighbors)
         if (!(x > 0 && x < 17)) {
             throw new IndexOutOfBoundsException("x cannot be in padding: " + x);
@@ -240,7 +218,7 @@ public class RenderOverlay extends RenderChunk {
 
         int sides = 0;
 
-        final BlockType type = types[x][y][z];
+        final int type = types[x][y][z];
 
         if (types[x][y - 1][z] != type) {
             sides |= GeometryMasks.Quad.DOWN;
@@ -281,6 +259,16 @@ public class RenderOverlay extends RenderChunk {
 
         if (this.vertexBuffer != null) {
             this.vertexBuffer.deleteGlBuffers();
+        }
+    }
+
+    public static Color getColor (String color, String def) {
+        try {
+            // If the given color is a valid color use it
+            return new Color((int) Long.parseLong(color.replace("0x", ""), 16), true);
+        } catch (NumberFormatException e) {
+            // Else just use the default
+            return new Color((int) Long.parseLong(def.replace("0x", ""), 16), true);
         }
     }
 }

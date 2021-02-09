@@ -172,7 +172,6 @@ public class ClientProxy extends CommonProxy {
                 ConfigurationHandler.propAlpha,
                 ConfigurationHandler.propBlockDelta,
                 ConfigurationHandler.propRenderDistance,
-                ConfigurationHandler.propPlaceSpeed,
                 ConfigurationHandler.propTimeout,
                 ConfigurationHandler.propPlaceDistance
         };

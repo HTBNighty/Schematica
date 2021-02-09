@@ -45,7 +45,7 @@ public class ConfigurationHandler {
     public static final String OPTIMAL_DEFAULT = "0x3FD883FC";
     public static final String OPTIMAL_PLACEABLE_DEFAULT = "0x4A9D00E0";
 
-    public static final int PLACE_SPEED_DEFAULT = 20;
+    public static final int PLACE_SPEED_DEFAULT = 0;
     public static final int BREAK_PAUSE_DEFAULT = 25;
     public static final int SWAP_DELAY_DEFAULT = 5;
     public static final int TIMEOUT_DEFAULT = 10;

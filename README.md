@@ -1,8 +1,8 @@
-#Mapmatica
+# Mapmatica
 Mapmatica is a fork of the mod Schematica. Mapmatica is made specifically to make the task of making mapart easier.<br>
 [![Discord](https://img.shields.io/discord/740716348342009925?color=blue&label=Discord&logo=discord)](https://discord.gg/QpNYBu2RgG)
 
-###Features:<br>
+### Features:<br>
 *Printer:*
 - Unlimited place speed
 - Better block place order

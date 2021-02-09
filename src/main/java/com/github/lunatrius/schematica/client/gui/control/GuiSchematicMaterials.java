@@ -10,6 +10,7 @@ import com.github.lunatrius.schematica.reference.Names;
 import com.github.lunatrius.schematica.reference.Reference;
 import com.github.lunatrius.schematica.util.ItemStackSortType;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
@@ -21,6 +22,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.Formatter;
 import java.util.List;
 
@@ -34,19 +36,15 @@ public class GuiSchematicMaterials extends GuiScreenBase {
     private GuiUnicodeGlyphButton btnSort = null;
     private GuiButton btnDump = null;
     private GuiButton btnDone = null;
+    private GuiButton btnReload = null;
 
     private final String strMaterialName = I18n.format(Names.Gui.Control.MATERIAL_NAME);
     private final String strMaterialAmount = I18n.format(Names.Gui.Control.MATERIAL_AMOUNT);
 
-    protected final List<BlockList.WrappedItemStack> blockList;
+    protected static List<BlockList.WrappedItemStack> blockList = new ArrayList<>();
 
     public GuiSchematicMaterials(final GuiScreen guiScreen) {
         super(guiScreen);
-
-        final Minecraft minecraft = Minecraft.getMinecraft();
-        final SchematicWorld schematic = ClientProxy.schematic;
-        this.blockList = new BlockList().getList(minecraft.player, schematic, minecraft.world);
-        this.sortType.sort(this.blockList);
     }
 
     @Override
@@ -61,6 +59,11 @@ public class GuiSchematicMaterials extends GuiScreenBase {
 
         this.btnDone = new GuiButton(++id, this.width / 2 + 54, this.height - 30, 100, 20, I18n.format(Names.Gui.DONE));
         this.buttonList.add(this.btnDone);
+
+        String icon = "\u27F3";
+        FontRenderer fr = Minecraft.getMinecraft().fontRenderer;
+        this.btnReload = new GuiButton(++id, 1, this.height - fr.getStringWidth(icon) * 2 - 8, fr.getStringWidth(icon) * 2 + 7, fr.getStringWidth(icon) * 2 + 7, icon);
+        this.buttonList.add(btnReload);
 
         this.guiSchematicMaterialsSlot = new GuiSchematicMaterialsSlot(this);
     }
@@ -86,6 +89,11 @@ public class GuiSchematicMaterials extends GuiScreenBase {
                 dumpMaterialList(this.blockList);
             } else if (guiButton.id == this.btnDone.id) {
                 this.mc.displayGuiScreen(this.parentScreen);
+            } else if (guiButton.id == this.btnReload.id) {
+                final Minecraft minecraft = Minecraft.getMinecraft();
+                final SchematicWorld schematic = ClientProxy.schematic;
+                this.blockList = new BlockList().getList(minecraft.player, schematic, minecraft.world);
+                this.sortType.sort(this.blockList);
             } else {
                 this.guiSchematicMaterialsSlot.actionPerformed(guiButton);
             }

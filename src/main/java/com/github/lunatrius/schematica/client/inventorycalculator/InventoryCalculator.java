@@ -6,6 +6,7 @@ import com.github.lunatrius.core.util.math.BlockPosHelper;
 import com.github.lunatrius.core.util.math.MBlockPos;
 import com.github.lunatrius.schematica.api.ISchematic;
 import com.github.lunatrius.schematica.client.gui.inventorycalc.GuiInventoryCalculator;
+import com.github.lunatrius.schematica.client.printer.SchematicPrinter;
 import com.github.lunatrius.schematica.client.util.BlockList;
 import com.github.lunatrius.schematica.client.world.SchematicWorld;
 import com.github.lunatrius.schematica.handler.ConfigurationHandler;
@@ -41,6 +42,9 @@ public class InventoryCalculator {
     public static InventoryCalculator INSTANCE = new InventoryCalculator();
     private SchematicWorld schematicWorld = ClientProxy.schematic;
 
+    /** The thread that is currently calculating the inventory, null if not calculating. */
+    private Thread thread = null;
+
     /**
      * A set of blocks pos that were included when the optimal inventory was calculated,
      * allows for printer and render filtering.
@@ -63,65 +67,75 @@ public class InventoryCalculator {
     private Set<MBlockPos> floodCountedBlocks = new HashSet<>();
 
     public void calculateOptimalInv () {
-        this.schematicWorld = ClientProxy.schematic;
-        if (schematicWorld == null) {
-            Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(new TextComponentString("\2477[Mapmatica] \247cCannot get inventory of schematic (no schematic is loaded?)"));
-            return;
-        }
+        this.thread = new Thread(() -> {
+            SchematicPrinter printer = SchematicPrinter.INSTANCE;
+            printer.forceDisable = true; // Disable printer to prevent crash
 
-        ISchematic schematic = schematicWorld.getSchematic();
-
-        optimalInventory = new HashMap<>();
-
-        // Resets counted blocks if it is not null and inits it if it is null
-        optimalBlocks = new HashSet<>();
-
-        int openSlots = 0;
-        for (ItemStack stack : Minecraft.getMinecraft().player.inventory.mainInventory) {
-            if (stack.getItem() == Items.AIR) {
-                openSlots++;
+            this.schematicWorld = ClientProxy.schematic;
+            if (schematicWorld == null) {
+                Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(new TextComponentString("\2477[Mapmatica] \247cCannot get inventory of schematic (no schematic is loaded?)"));
+                return;
             }
-        }
 
-        int range = ConfigurationHandler.inventoryCalculatorRange;
-        MBlockPos currentPos = getHighestFloodCountBlock(range, null);
+            ISchematic schematic = schematicWorld.getSchematic();
 
-        // If the current block is null there are no more blocks to check,
-        // Stop when the optimalInventory would fill up the player's inventory
-        while (currentPos != null /*&& doesFitInInv(schematic.getBlockState(currentPos), optimalInventory, openSlots)*/) {
-            Set<IBlockState> targets = new HashSet<>();
-            Set<IBlockState> whitelist = new HashSet<>();
+            optimalInventory = new HashMap<>();
 
-            // If the current pos fits the inventory we can use the range to determine the targets
-            if (doesFitInInv(schematic.getBlockState(currentPos), optimalInventory, openSlots)) {
-                for (MBlockPos targetPos : BlockPosHelper.getAllInBoxXZY(currentPos.x + range, currentPos.y + range, currentPos.z + range, currentPos.x - range, currentPos.y - range, currentPos.z - range)) {
-                    if (schematicWorld.isInside(targetPos)) {
-                        targets.add(schematic.getBlockState(targetPos));
-                    }
+            // Resets counted blocks if it is not null and inits it if it is null
+            optimalBlocks = new HashSet<>();
+
+            int openSlots = 0;
+            for (ItemStack stack : Minecraft.getMinecraft().player.inventory.mainInventory) {
+                if (stack.getItem() == Items.AIR) {
+                    openSlots++;
                 }
+            }
 
-            } else { // If the current block doesnt fit the inventory, we can use the incomplete stacks to determine the targets
-                boolean hasIncompleteStack = false;
-                for (IBlockState state : optimalInventory.keySet()) {
-                    if (optimalInventory.get(state) % 64 != 0) {
-                        if (!canPlace(state)) {
-                            continue;
+            int range = ConfigurationHandler.inventoryCalculatorRange;
+            MBlockPos currentPos = getHighestFloodCountBlock(range, null);
+
+            // If the current block is null there are no more blocks to check,
+            // Stop when the optimalInventory would fill up the player's inventory
+            while (currentPos != null /*&& doesFitInInv(schematic.getBlockState(currentPos), optimalInventory, openSlots)*/) {
+                Set<IBlockState> targets = new HashSet<>();
+                Set<IBlockState> whitelist = new HashSet<>();
+
+                // If the current pos fits the inventory we can use the range to determine the targets
+                if (doesFitInInv(schematic.getBlockState(currentPos), optimalInventory, openSlots)) {
+                    for (MBlockPos targetPos : BlockPosHelper.getAllInBoxXZY(currentPos.x + range, currentPos.y + range, currentPos.z + range, currentPos.x - range, currentPos.y - range, currentPos.z - range)) {
+                        if (schematicWorld.isInside(targetPos)) {
+                            targets.add(schematic.getBlockState(targetPos));
                         }
+                    }
 
-                        targets.add(state); // We dont need to worry about the number of blocks for targets
-                        whitelist.add(state);
-                        hasIncompleteStack = true;
+                } else { // If the current block doesnt fit the inventory, we can use the incomplete stacks to determine the targets
+                    boolean hasIncompleteStack = false;
+                    for (IBlockState state : optimalInventory.keySet()) {
+                        if (optimalInventory.get(state) % 64 != 0) {
+                            if (!canPlace(state)) {
+                                continue;
+                            }
+
+                            targets.add(state); // We dont need to worry about the number of blocks for targets
+                            whitelist.add(state);
+                            hasIncompleteStack = true;
+                        }
+                    }
+
+                    if (!hasIncompleteStack) {
+                        break;
                     }
                 }
 
-                if (!hasIncompleteStack) {
-                    break;
-                }
+                this.floodAdd(currentPos, targets, openSlots);
+                currentPos = getHighestFloodCountBlock(range, whitelist.isEmpty() ? null : whitelist);
             }
 
-            this.floodAdd(currentPos, targets, openSlots);
-            currentPos = getHighestFloodCountBlock(range, whitelist.isEmpty() ? null : whitelist);
-        }
+            printer.forceDisable = false; // Re-enable printer
+            InventoryCalculator.INSTANCE.thread = null; // ¯\_(ツ  )_/¯
+        });
+        this.thread.setName("InvCalc Thread");
+        this.thread.start();
     }
 
     /**
@@ -373,5 +387,18 @@ public class InventoryCalculator {
 
     public void setOptimalInventory(Map<IBlockState, Integer> optimalInventory) {
         this.optimalInventory = optimalInventory;
+    }
+
+    public Thread getThread() {
+        return thread;
+    }
+
+    public boolean isCalculating () {
+        return this.thread != null;
+    }
+
+    public void stopCalculating () {
+        this.thread.interrupt();
+        this.thread = null;
     }
 }

@@ -56,7 +56,7 @@ public class TickHandler {
     public void onUpdateWalkingPlayer () {
         final SchematicPrinter printer = SchematicPrinter.INSTANCE;
 
-        if (minecraft.isGamePaused() || !printer.isEnabled() || !printer.isPrinting()
+        if (minecraft.isGamePaused() || !printer.isEnabled() || printer.forceDisable || !printer.isPrinting()
         || ((System.nanoTime() - lastBreakTime) / 1000000L) < ConfigurationHandler.breakPause) {
             return;
         }

@@ -42,6 +42,9 @@ public class SchematicPrinter {
     private boolean isEnabled = true;
     private boolean isPrinting = false;
 
+    // Allows other parts of the mod to disable the printer for any amount of time
+    public boolean forceDisable = false;
+
     private long lastSwapTime = 0;
 
     private SchematicWorld schematic = null;

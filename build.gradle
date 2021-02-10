@@ -32,10 +32,10 @@ apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'com.matthewprenger.cursegradle'
 apply plugin: 'com.github.johnrengelman.shadow'
 
-ext.modversion = "2.0"
+ext.modversion = project.mapmatica_version
 
 group = 'com.github.lunatrius'
-version = "2.0"
+version = project.mapmatica_version
 
 sourceCompatibility = '1.8'
 targetCompatibility = '1.8'

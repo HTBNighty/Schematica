@@ -34,7 +34,6 @@ import java.util.*;
  * The goal is to find a list of block stacks that will all be used when a player takes
  * them to a map and prints them.
  *
- * TODO: Multi-threading?
  * @author Old Chum
  * @since 8/26/20
  */

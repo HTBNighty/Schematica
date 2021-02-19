@@ -394,6 +394,10 @@ public class SchematicPrinter {
     private boolean swapToItem(final InventoryPlayer inventory, final ItemStack itemStack, final boolean swapSlots) {
         final int slot = getInventorySlotWithItem(inventory, itemStack);
 
+        if (SlotManager.INSTANCE.getBlockedInvSlots().contains(slot)) {
+            return false;
+        }
+
         if (this.minecraft.playerController.isInCreativeMode() && (slot < Constants.Inventory.InventoryOffset.HOTBAR || slot >= Constants.Inventory.InventoryOffset.HOTBAR + Constants.Inventory.Size.HOTBAR) && ConfigurationHandler.swapSlotsQueue.size() > 0) {
             inventory.currentItem = getNextSlot();
             inventory.setInventorySlotContents(inventory.currentItem, itemStack.copy());
@@ -402,8 +406,12 @@ public class SchematicPrinter {
         }
 
         if (slot >= Constants.Inventory.InventoryOffset.HOTBAR && slot < Constants.Inventory.InventoryOffset.HOTBAR + Constants.Inventory.Size.HOTBAR) {
-            inventory.currentItem = slot;
-            return true;
+            if (SlotManager.INSTANCE.getUsableSlots()[slot]) {
+                inventory.currentItem = slot;
+                return true;
+            } else {
+                return false;
+            }
         } else if (swapSlots && slot >= Constants.Inventory.InventoryOffset.INVENTORY && slot < Constants.Inventory.InventoryOffset.INVENTORY + Constants.Inventory.Size.INVENTORY) {
             if (swapSlots(inventory, slot)) {
                 return swapToItem(inventory, itemStack, false);
@@ -416,6 +424,12 @@ public class SchematicPrinter {
     private int getInventorySlotWithItem(final InventoryPlayer inventory, final ItemStack itemStack) {
         for (int i = 0; i < inventory.mainInventory.size(); i++) {
             if (inventory.mainInventory.get(i).isItemEqual(itemStack)) {
+                if (i < Constants.Inventory.InventoryOffset.HOTBAR + Constants.Inventory.Size.HOTBAR) {
+                    if (!SlotManager.INSTANCE.getUsableSlots()[i]) {
+                        continue;
+                    }
+                }
+
                 return i;
             }
         }
@@ -426,6 +440,10 @@ public class SchematicPrinter {
         if (ConfigurationHandler.swapSlotsQueue.size() > 0) {
             final int slot = getNextSlot();
 
+            if (slot == -1) {
+                return false;
+            }
+
             swapSlots(from, slot);
             return true;
         }
@@ -434,13 +452,19 @@ public class SchematicPrinter {
     }
 
     private int getNextSlot() {
-        final int slot = ConfigurationHandler.swapSlotsQueue.poll() % Constants.Inventory.Size.HOTBAR;
-        ConfigurationHandler.swapSlotsQueue.offer(slot);
-        return slot;
+        for (int currentSlot : ConfigurationHandler.swapSlotsQueue) {
+            if (SlotManager.INSTANCE.getUsableSlots()[currentSlot % Constants.Inventory.Size.HOTBAR]) {
+                ConfigurationHandler.swapSlotsQueue.remove(currentSlot);
+                ConfigurationHandler.swapSlotsQueue.offer(currentSlot);
+                return currentSlot % Constants.Inventory.Size.HOTBAR;
+            }
+        }
+
+        return -1;
     }
 
-    private boolean swapSlots(final int from, final int to) {
+    private void swapSlots(final int from, final int to) {
         this.lastSwapTime = System.nanoTime();
-        return this.minecraft.playerController.windowClick(this.minecraft.player.inventoryContainer.windowId, from, to, ClickType.SWAP, this.minecraft.player) == ItemStack.EMPTY;
+        SlotManager.INSTANCE.swapSlots(this.minecraft.player.inventoryContainer.windowId, from, to, ClickType.SWAP, this.minecraft.player);
     }
 }

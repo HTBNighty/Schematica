@@ -91,6 +91,7 @@ public class PlacementData {
     }
 
     public boolean isValidPlayerFacing(final IBlockState blockState, final EntityPlayer player, final BlockPos pos, final World world) {
+        // TODO: This needs to make sure the player's rotation on the server is valid, not on the client
         return this.validPlayerFacing == null || this.validPlayerFacing.isValid(blockState, player, pos, world);
     }
 

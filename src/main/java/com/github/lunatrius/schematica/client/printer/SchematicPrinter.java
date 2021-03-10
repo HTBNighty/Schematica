@@ -280,8 +280,16 @@ public class SchematicPrinter {
         final List<EnumFacing> list = new ArrayList<EnumFacing>();
 
         for (final EnumFacing side : EnumFacing.VALUES) {
+            BlockPos offset = pos.offset(side);
+
             if (isSolid(world, pos, side)) {
                 list.add(side);
+            } else if (ConfigurationHandler.noGhostBlocks && ConfigurationHandler.predictPlace) {
+                if (this.schematic.isInside(offset)) { // Check if the offset is inside of the schematic (wont throw OOB)
+                    if (this.timeout[offset.getX()][offset.getY()][offset.getZ()] > 0) {
+                        list.add(side);
+                    }
+                }
             }
         }
 

@@ -117,6 +117,8 @@ schematica.config.printNoobline=Print Noobline
 schematica.config.printNoobline.tooltip=If printer should place blocks on the noobline.
 schematica.config.noGhostBlocks=No Ghost Blocks
 schematica.config.noGhostBlocks.tooltip=If the client should wait for a response from the server before changing a block.
+schematica.config.predictPlace=Predict Place
+schematica.config.predictPlace.tooltip=Speeds up printing by attempting to place blocks on blocks that have not been confirmed to have been placed successfully (Only works when NoGhostBlocks is enabled)
 
 # gui - config - printer - swap slots
 schematica.config.swapSlot0=Allow Slot 1

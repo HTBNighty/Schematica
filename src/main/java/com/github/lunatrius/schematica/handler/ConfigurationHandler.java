@@ -11,7 +11,6 @@ import net.minecraftforge.common.config.Property;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayDeque;
@@ -56,6 +55,7 @@ public class ConfigurationHandler {
     public static final boolean PLACE_ADJACENT_DEFAULT = true;
     public static final boolean PRINT_NOOBLINE_DEFAULT = false;
     public static final boolean NO_GHOST_BLOCKS_DEFAULT = false;
+    public static final boolean PREDICT_PLACE_DEFAULT = false;
     public static final boolean[] SWAP_SLOTS_DEFAULT = new boolean[] {
             false, false, false, false, false, true, true, true, true
     };
@@ -97,6 +97,7 @@ public class ConfigurationHandler {
     public static boolean placeAdjacent = PLACE_ADJACENT_DEFAULT;
     public static boolean printNoobline = PRINT_NOOBLINE_DEFAULT;
     public static boolean noGhostBlocks = NO_GHOST_BLOCKS_DEFAULT;
+    public static boolean predictPlace = PREDICT_PLACE_DEFAULT;
     public static boolean[] swapSlots = Arrays.copyOf(SWAP_SLOTS_DEFAULT, SWAP_SLOTS_DEFAULT.length);
     public static final Queue<Integer> swapSlotsQueue = new ArrayDeque<Integer>();
     public static File schematicDirectory = SCHEMATIC_DIRECTORY_DEFAULT;
@@ -136,6 +137,7 @@ public class ConfigurationHandler {
     public static Property propPlaceAdjacent = null;
     public static Property propPrintNoobline = null;
     public static Property propNoGhostBlocks = null;
+    public static Property propPredictPlace = null;
     public static Property[] propSwapSlots = new Property[SWAP_SLOTS_DEFAULT.length];
     public static Property propSchematicDirectory = null;
     public static Property propExtraAirBlocks = null;
@@ -284,6 +286,10 @@ public class ConfigurationHandler {
         propNoGhostBlocks = configuration.get(Names.Config.Category.PRINTER, Names.Config.NO_GHOST_BLOCKS, NO_GHOST_BLOCKS_DEFAULT, Names.Config.NO_GHOST_BLOCKS_DESC);
         propNoGhostBlocks.setLanguageKey(Names.Config.LANG_PREFIX + "." + Names.Config.NO_GHOST_BLOCKS);
         noGhostBlocks = propNoGhostBlocks.getBoolean(NO_GHOST_BLOCKS_DEFAULT);
+
+        propPredictPlace = configuration.get(Names.Config.Category.PRINTER, Names.Config.PREDICT_PLACE, PREDICT_PLACE_DEFAULT, Names.Config.PREDICT_PLACE_DESC);
+        propPredictPlace.setLanguageKey(Names.Config.LANG_PREFIX + "." + Names.Config.PREDICT_PLACE);
+        predictPlace = propPredictPlace.getBoolean(PREDICT_PLACE_DEFAULT);
     }
 
     private static void loadConfigurationSwapSlots() {

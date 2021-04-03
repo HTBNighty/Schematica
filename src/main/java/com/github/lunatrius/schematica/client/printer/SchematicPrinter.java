@@ -42,6 +42,9 @@ public class SchematicPrinter {
     private boolean isEnabled = true;
     private boolean isPrinting = false;
 
+    // Horrible hack.
+    private boolean addToTimeout = true;
+
     // Allows other parts of the mod to disable the printer for any amount of time
     public boolean forceDisable = false;
 
@@ -236,8 +239,12 @@ public class SchematicPrinter {
             return false;
         }
 
-        if (placeBlock(world, player, realPos, blockState, itemStack)) {
-            this.timeout[x][y][z] = (byte) ConfigurationHandler.timeout;
+        if (placeBlock(world, player, realPos, pos, blockState, itemStack)) {
+            if (addToTimeout) {
+                this.timeout[x][y][z] = (byte) ConfigurationHandler.timeout;
+            }
+
+            addToTimeout = true;
 
             if (!ConfigurationHandler.placeInstantly) {
                 return true;
@@ -272,7 +279,7 @@ public class SchematicPrinter {
         return true;
     }
 
-    private List<EnumFacing> getSolidSides(final World world, final BlockPos pos) {
+    private List<EnumFacing> getSolidSides(final World world, final BlockPos pos, final BlockPos relPos) {
         if (!ConfigurationHandler.placeAdjacent) {
             return Arrays.asList(EnumFacing.VALUES);
         }
@@ -280,14 +287,15 @@ public class SchematicPrinter {
         final List<EnumFacing> list = new ArrayList<EnumFacing>();
 
         for (final EnumFacing side : EnumFacing.VALUES) {
-            BlockPos offset = pos.offset(side);
-
             if (isSolid(world, pos, side)) {
                 list.add(side);
             } else if (ConfigurationHandler.noGhostBlocks && ConfigurationHandler.predictPlace) {
-                if (this.schematic.isInside(offset)) { // Check if the offset is inside of the schematic (wont throw OOB)
-                    if (this.timeout[offset.getX()][offset.getY()][offset.getZ()] > 0) {
+                BlockPos relOffset = relPos.offset(side);
+
+                if (this.schematic.isInside(relOffset)) { // Check if the relOffset is inside of the schematic (wont throw OOB)
+                    if (this.timeout[relOffset.getX()][relOffset.getY()][relOffset.getZ()] > 0) {
                         list.add(side);
+                        addToTimeout = false;
                     }
                 }
             }
@@ -296,7 +304,7 @@ public class SchematicPrinter {
         return list;
     }
 
-    private boolean placeBlock(final WorldClient world, final EntityPlayerSP player, final BlockPos pos, final IBlockState blockState, final ItemStack itemStack) {
+    private boolean placeBlock(final WorldClient world, final EntityPlayerSP player, final BlockPos pos, final BlockPos relPos, final IBlockState blockState, final ItemStack itemStack) {
         if (itemStack.getItem() instanceof ItemBucket) {
             return false;
         }
@@ -306,7 +314,7 @@ public class SchematicPrinter {
             return false;
         }
 
-        final List<EnumFacing> solidSides = getSolidSides(world, pos);
+        final List<EnumFacing> solidSides = getSolidSides(world, pos, relPos);
 
         if (solidSides.size() == 0) {
             return false;

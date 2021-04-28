@@ -4,6 +4,7 @@ import com.github.lunatrius.core.client.renderer.GeometryMasks;
 import com.github.lunatrius.core.client.renderer.GeometryTessellator;
 import com.github.lunatrius.core.util.math.MBlockPos;
 import com.github.lunatrius.schematica.client.inventorycalculator.InventoryCalculator;
+import com.github.lunatrius.schematica.client.printer.SchematicPrinter;
 import com.github.lunatrius.schematica.client.renderer.chunk.CompiledOverlay;
 import com.github.lunatrius.schematica.client.world.SchematicWorld;
 import com.github.lunatrius.schematica.handler.ConfigurationHandler;
@@ -142,8 +143,7 @@ public class RenderOverlay extends RenderChunk {
                         boolean isPlaceable = false;
                         if (isInInventory) {
                             for (EnumFacing side : EnumFacing.VALUES) {
-                                IBlockState adjacentState = mcWorld.getBlockState(mcPos.offset(side));
-                                if (adjacentState.getBlock().canCollideCheck(adjacentState, false)) {
+                                if (SchematicPrinter.isSolid(mcWorld, mcPos.offset(side))) {
                                     isPlaceable = true;
                                     break;
                                 }

@@ -56,6 +56,7 @@ public class ConfigurationHandler {
     public static final boolean PRINT_NOOBLINE_DEFAULT = false;
     public static final boolean NO_GHOST_BLOCKS_DEFAULT = false;
     public static final boolean PREDICT_PLACE_DEFAULT = false;
+    public static final boolean LIQUID_PLACE_DEFAULT = true;
     public static final boolean[] SWAP_SLOTS_DEFAULT = new boolean[] {
             false, false, false, false, false, true, true, true, true
     };
@@ -98,6 +99,7 @@ public class ConfigurationHandler {
     public static boolean printNoobline = PRINT_NOOBLINE_DEFAULT;
     public static boolean noGhostBlocks = NO_GHOST_BLOCKS_DEFAULT;
     public static boolean predictPlace = PREDICT_PLACE_DEFAULT;
+    public static boolean liquidPlace = LIQUID_PLACE_DEFAULT;
     public static boolean[] swapSlots = Arrays.copyOf(SWAP_SLOTS_DEFAULT, SWAP_SLOTS_DEFAULT.length);
     public static final Queue<Integer> swapSlotsQueue = new ArrayDeque<Integer>();
     public static File schematicDirectory = SCHEMATIC_DIRECTORY_DEFAULT;
@@ -138,6 +140,7 @@ public class ConfigurationHandler {
     public static Property propPrintNoobline = null;
     public static Property propNoGhostBlocks = null;
     public static Property propPredictPlace = null;
+    public static Property propLiquidPlace = null;
     public static Property[] propSwapSlots = new Property[SWAP_SLOTS_DEFAULT.length];
     public static Property propSchematicDirectory = null;
     public static Property propExtraAirBlocks = null;
@@ -290,6 +293,10 @@ public class ConfigurationHandler {
         propPredictPlace = configuration.get(Names.Config.Category.PRINTER, Names.Config.PREDICT_PLACE, PREDICT_PLACE_DEFAULT, Names.Config.PREDICT_PLACE_DESC);
         propPredictPlace.setLanguageKey(Names.Config.LANG_PREFIX + "." + Names.Config.PREDICT_PLACE);
         predictPlace = propPredictPlace.getBoolean(PREDICT_PLACE_DEFAULT);
+
+        propLiquidPlace = configuration.get(Names.Config.Category.PRINTER, Names.Config.LIQUID_PLACE, LIQUID_PLACE_DEFAULT, Names.Config.LIQUID_PLACE_DESC);
+        propLiquidPlace.setLanguageKey(Names.Config.LANG_PREFIX + "." + Names.Config.LIQUID_PLACE);
+        liquidPlace = propLiquidPlace.getBoolean();
     }
 
     private static void loadConfigurationSwapSlots() {

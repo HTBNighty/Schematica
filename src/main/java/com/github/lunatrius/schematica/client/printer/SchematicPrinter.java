@@ -14,6 +14,7 @@ import com.github.lunatrius.schematica.proxy.ClientProxy;
 import com.github.lunatrius.schematica.reference.Constants;
 import com.github.lunatrius.schematica.reference.Reference;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -30,7 +31,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraftforge.fluids.BlockFluidBase;
 
 import java.util.*;
 
@@ -254,25 +254,23 @@ public class SchematicPrinter {
         return false;
     }
 
-    private boolean isSolid(final World world, final BlockPos pos, final EnumFacing side) {
-        final BlockPos offset = pos.offset(side);
-
-        final IBlockState blockState = world.getBlockState(offset);
+    public static boolean isSolid(final World world, final BlockPos pos) {
+        final IBlockState blockState = world.getBlockState(pos);
         final Block block = blockState.getBlock();
 
-        if (block == null) {
+        if (block.isAir(blockState, world, pos)) {
             return false;
         }
 
-        if (block.isAir(blockState, world, offset)) {
-            return false;
+        if (block instanceof BlockLiquid) {
+            if (ConfigurationHandler.liquidPlace && !Minecraft.getMinecraft().isSingleplayer()) {
+                return true;
+            } else {
+                return false;
+            }
         }
 
-        if (block instanceof BlockFluidBase) {
-            return false;
-        }
-
-        if (block.isReplaceable(world, offset)) {
+        if (block.isReplaceable(world, pos)) {
             return false;
         }
 
@@ -287,7 +285,7 @@ public class SchematicPrinter {
         final List<EnumFacing> list = new ArrayList<EnumFacing>();
 
         for (final EnumFacing side : EnumFacing.VALUES) {
-            if (isSolid(world, pos, side)) {
+            if (isSolid(world, pos.offset(side))) {
                 list.add(side);
             } else if (ConfigurationHandler.noGhostBlocks && ConfigurationHandler.predictPlace) {
                 BlockPos relOffset = relPos.offset(side);

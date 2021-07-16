@@ -124,7 +124,7 @@ public class RenderSchematic extends RenderGlobal {
     public RenderSchematic(final Minecraft minecraft) {
         super(minecraft);
         this.mc = minecraft;
-        this.profiler = minecraft.mcProfiler;
+        this.profiler = minecraft.profiler;
         this.renderManager = minecraft.getRenderManager();
         GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL11.GL_REPEAT);
         GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL11.GL_REPEAT);
@@ -941,7 +941,7 @@ public class RenderSchematic extends RenderGlobal {
 
     @Override
     public boolean hasNoChunkUpdates() {
-        return this.chunksToUpdate.isEmpty() && this.renderDispatcher.hasChunkUpdates();
+        return this.chunksToUpdate.isEmpty() && !this.renderDispatcher.hasNoChunkUpdates();
     }
 
     @Override

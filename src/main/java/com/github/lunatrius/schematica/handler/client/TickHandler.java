@@ -65,7 +65,7 @@ public class TickHandler {
         final EntityPlayerSP player = this.minecraft.player;
         final SchematicWorld schematic = ClientProxy.schematic;
         if (world != null && player != null && schematic != null && schematic.isRendering) {
-            this.minecraft.mcProfiler.startSection("printer");
+            this.minecraft.profiler.startSection("printer");
 
             // Make sure the time passed since the last place is greater than 1 second divided by the blocks placed per second
             if ((ConfigurationHandler.placeSpeed == 0) || (System.nanoTime() - lastPlaceTime >= 1000000000L / ConfigurationHandler.placeSpeed)) {
@@ -74,7 +74,7 @@ public class TickHandler {
                 printer.print(world, player);
             }
 
-            this.minecraft.mcProfiler.endSection();
+            this.minecraft.profiler.endSection();
         }
     }
 

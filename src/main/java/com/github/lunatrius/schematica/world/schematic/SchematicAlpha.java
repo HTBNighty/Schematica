@@ -204,7 +204,7 @@ public class SchematicAlpha extends SchematicFormat {
         tagCompound.setTag(Names.NBT.TILE_ENTITIES, tileEntitiesList);
         tagCompound.setTag(Names.NBT.MAPPING_SCHEMATICA, nbtMapping);
         final NBTTagCompound extendedMetadata = event.extendedMetadata;
-        if (!extendedMetadata.hasNoTags()) {
+        if (!extendedMetadata.isEmpty()) {
             tagCompound.setTag(Names.NBT.EXTENDED_METADATA, extendedMetadata);
         }
 

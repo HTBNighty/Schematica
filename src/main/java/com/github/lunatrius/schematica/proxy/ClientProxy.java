@@ -209,7 +209,7 @@ public class ClientProxy extends CommonProxy {
 
     @Override
     public File getDataDirectory() {
-        final File file = MINECRAFT.mcDataDir;
+        final File file = MINECRAFT.gameDir;
         try {
             return file.getCanonicalFile();
         } catch (final IOException e) {

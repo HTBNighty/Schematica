@@ -32,10 +32,10 @@ apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'com.matthewprenger.cursegradle'
 apply plugin: 'com.github.johnrengelman.shadow'
 
-ext.modversion = project.mapmatica_version
+ext.modversion = project.version
 
 group = 'com.github.lunatrius'
-version = project.mapmatica_version
+version = project.version
 
 sourceCompatibility = '1.8'
 targetCompatibility = '1.8'
@@ -48,7 +48,7 @@ compileJava {
 }
 
 minecraft {
-    mappings channel: 'snapshot', version: '20171010-1.12'
+    mappings channel: 'stable', version: '39-1.12'
     accessTransformer = file('src/main/resources/META-INF/schematica_at.cfg')
 
     // Credit: Kami Blue
@@ -75,7 +75,7 @@ processResources {
         expand([
                 'modid'          : project.name,
                 'version'        : modversion,
-                'mcversion'      : project.version_minecraft,
+                'mcversion'      : project.mcversion,
                 'forgeversion'   : project.version_forge,
                 'minforgeversion': project.hasProperty('version_minforge') ? project.version_minforge : project.version_forge,
                 'coreversion'    : project.version_lunatriuscore
@@ -101,7 +101,7 @@ repositories {
 dependencies {
     minecraft "net.minecraftforge:forge:1.12.2-14.23.5.2854"
 
-    implementation fg.deobf(group: group, name: 'LunatriusCore', version: "${project.version_minecraft}-${project.version_lunatriuscore}", classifier: 'universal')
+    implementation fg.deobf(group: group, name: 'LunatriusCore', version: "${project.mcversion}-${project.version_lunatriuscore}", classifier: 'universal')
 
     implementation ('org.spongepowered:mixin:0.7.11-SNAPSHOT') {
         exclude module: 'commons-io'
@@ -154,6 +154,11 @@ jar {
                 'FMLAT': 'schematica_at.cfg'
         )
     }
+}
+
+task devJar(type: Jar) {
+    classifier = "dev"
+    from sourceSets.main.output
 }
 
 build.dependsOn(shadowJar)

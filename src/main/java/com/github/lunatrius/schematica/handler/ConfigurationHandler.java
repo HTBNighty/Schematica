@@ -262,7 +262,7 @@ public class ConfigurationHandler {
         propTimeout.setLanguageKey(Names.Config.LANG_PREFIX + "." + Names.Config.TIMEOUT);
         timeout = propTimeout.getInt(TIMEOUT_DEFAULT);
 
-        propPlaceDistance = configuration.get(Names.Config.Category.PRINTER, Names.Config.PLACE_DISTANCE, PLACE_DISTANCE_DEFAULT, Names.Config.PLACE_DISTANCE_DESC, 1, 5);
+        propPlaceDistance = configuration.get(Names.Config.Category.PRINTER, Names.Config.PLACE_DISTANCE, PLACE_DISTANCE_DEFAULT, Names.Config.PLACE_DISTANCE_DESC, 1, 10);
         propPlaceDistance.setLanguageKey(Names.Config.LANG_PREFIX + "." + Names.Config.PLACE_DISTANCE);
         placeDistance = propPlaceDistance.getInt(PLACE_DISTANCE_DEFAULT);
 
@@ -325,7 +325,7 @@ public class ConfigurationHandler {
         propSortType.setShowInGui(false);
         sortType = propSortType.getString();
 
-        propInventoryCalcRange = configuration.get(Names.Config.Category.GENERAL, Names.Config.INV_CALC_RANGE, INVENTORY_CALCULATOR_RANGE_DEFAULT, Names.Config.INV_CALC_RANGE_DESC, 1, 25);
+        propInventoryCalcRange = configuration.get(Names.Config.Category.GENERAL, Names.Config.INV_CALC_RANGE, INVENTORY_CALCULATOR_RANGE_DEFAULT, Names.Config.INV_CALC_RANGE_DESC, 0, 25);
         propInventoryCalcRange.setLanguageKey(Names.Config.LANG_PREFIX + "." + Names.Config.INV_CALC_RANGE);
         inventoryCalculatorRange = propInventoryCalcRange.getInt();
 

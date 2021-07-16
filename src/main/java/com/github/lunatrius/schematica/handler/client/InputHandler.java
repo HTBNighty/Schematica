@@ -9,6 +9,7 @@ import com.github.lunatrius.schematica.client.printer.SchematicPrinter;
 import com.github.lunatrius.schematica.client.renderer.RenderSchematic;
 import com.github.lunatrius.schematica.client.world.SchematicWorld;
 import com.github.lunatrius.schematica.client.world.SchematicWorld.LayerMode;
+import com.github.lunatrius.schematica.handler.ConfigurationHandler;
 import com.github.lunatrius.schematica.proxy.ClientProxy;
 import com.github.lunatrius.schematica.reference.Names;
 import net.minecraft.client.Minecraft;
@@ -40,6 +41,7 @@ public class InputHandler {
     private static final KeyBinding KEY_BINDING_MOVE_HERE = new KeyBinding(Names.Keys.MOVE_HERE, Keyboard.KEY_NONE, Names.Keys.CATEGORY);
     private static final KeyBinding KEY_BINDING_PICK_BLOCK = new KeyBinding(Names.Keys.PICK_BLOCK, KeyConflictContext.IN_GAME, KeyModifier.SHIFT, -98, Names.Keys.CATEGORY);
     private static final KeyBinding KEY_BINDING_GET_INV = new KeyBinding(Names.Keys.GET_INV, Keyboard.KEY_NONE, Names.Keys.CATEGORY);
+    private static final KeyBinding KEY_BINDING_PREDICT_TOGGLE = new KeyBinding(Names.Keys.PREDICT_TOGGLE, Keyboard.KEY_NONE, Names.Keys.CATEGORY);
 
     public static final KeyBinding[] KEY_BINDINGS = new KeyBinding[] {
             KEY_BINDING_LOAD,
@@ -52,7 +54,8 @@ public class InputHandler {
             KEY_BINDING_PRINTER_TOGGLE,
             KEY_BINDING_MOVE_HERE,
             KEY_BINDING_PICK_BLOCK,
-            KEY_BINDING_GET_INV
+            KEY_BINDING_GET_INV,
+            KEY_BINDING_PREDICT_TOGGLE
     };
 
     private final Minecraft minecraft = Minecraft.getMinecraft();
@@ -130,6 +133,14 @@ public class InputHandler {
 
             if (KEY_BINDING_GET_INV.isPressed()) {
                 this.minecraft.displayGuiScreen(new GuiInventoryCalculator(this.minecraft.currentScreen));
+            }
+
+            if (KEY_BINDING_PREDICT_TOGGLE.isPressed()) {
+                if (ClientProxy.schematic != null) {
+                    ConfigurationHandler.propPredictPlace.set(!ConfigurationHandler.predictPlace);
+                    this.minecraft.player.sendMessage(new TextComponentTranslation(Names.Messages.TOGGLE_PREDICT, I18n.format(!ConfigurationHandler.predictPlace ? Names.Gui.ON : Names.Gui.OFF)));
+                    ConfigurationHandler.loadConfiguration();
+                }
             }
         }
     }

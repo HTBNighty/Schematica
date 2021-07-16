@@ -167,6 +167,7 @@ public final class Names {
 
     public static final class Messages {
         public static final String TOGGLE_PRINTER = "schematica.message.togglePrinter";
+        public static final String TOGGLE_PREDICT = "schematica.message.togglePredict";
 
         public static final String INVALID_BLOCK = "schematica.message.invalidBlock";
         public static final String INVALID_PROPERTY = "schematica.message.invalidProperty";
@@ -243,6 +244,7 @@ public final class Names {
         public static final String MOVE_HERE = "schematica.key.moveHere";
         public static final String PICK_BLOCK = "schematica.key.pickBlock";
         public static final String GET_INV = "schematica.key.inventoryCalculator";
+        public static final String PREDICT_TOGGLE = "schematica.key.predictToggle";
     }
 
     public static final class NBT {

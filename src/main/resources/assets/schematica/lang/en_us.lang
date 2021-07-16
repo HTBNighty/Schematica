@@ -173,6 +173,7 @@ schematica.key.printerToggle=Toggle Printer
 schematica.key.moveHere=Move here
 schematica.key.pickBlock=Pick Block
 schematica.key.inventoryCalculator=Inventory Calc
+schematica.key.predictToggle=Toggle Predict Place
 
 # commands - save
 schematica.command.save.usage=/schematicaSave <startX> <startY> <startZ> <endX> <endY> <endZ> <name> [format]
@@ -212,6 +213,7 @@ schematica.command.replace.success=Replaced %s blocks.
 
 # messages
 schematica.message.togglePrinter=Printer: %s
+schematica.message.togglePredict=Predict Place: %s
 schematica.message.invalidBlock="%s" does not exist.
 schematica.message.invalidProperty="%s" is not a valid property.
 schematica.message.invalidPropertyForBlock="%s" is not a valid property for "%s".

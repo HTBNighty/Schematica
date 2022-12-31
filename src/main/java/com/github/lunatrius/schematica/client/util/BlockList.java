@@ -152,34 +152,33 @@ public class BlockList {
         }
 
         public String getFormattedAmountMissing(final String strAvailable, final String strMissing) {
-            final int need = this.total - (this.inventory + this.placed);
-            final int needStx = Math.abs((int) Math.ceil((this.total - this.placed) / 64.0));
-            final int needInvStx = Math.abs((int) Math.ceil((this.total - (this.placed + this.inventory)) / 64.0));
+            final int totalAmountNeeded = this.total - (this.inventory + this.placed);
+            final int totalStacksUnplaced = Math.abs((int) Math.ceil((this.total - this.placed) / 64.0));
+            final int totalStacksUncollected = Math.abs((int) Math.ceil((this.total - (this.placed + this.inventory)) / 64.0));
 
-            // Get invStx
-            int invStx = 0;
+            int stacksInInventory = 0;
             for (ItemStack stack : Minecraft.getMinecraft().player.inventory.mainInventory) {
                 if (stack.getItem() instanceof ItemBlock && this.itemStack.getItem() instanceof ItemBlock) {
                     if (((ItemBlock) stack.getItem()).getBlock().getStateFromMeta(stack.getMetadata()) == ((ItemBlock) this.itemStack.getItem()).getBlock().getStateFromMeta(this.itemStack.getMetadata())) {
-                        invStx++;
+                        stacksInInventory++;
                     }
                 }
             }
 
             if (Minecraft.getMinecraft().player.inventory.offHandInventory.get(0).getItem() == this.itemStack.getItem()) {
-                invStx++;
+                stacksInInventory++;
             }
 
-            String strAmount = String.format("%d (%s)", need, needInvStx >= 27 ? (int) Math.ceil(needStx / 27.0) + " Shlk" : needInvStx + " Stx");
+            String strAmount = String.format("%d (%s)", totalAmountNeeded, totalStacksUncollected >= 27 ? (int) Math.ceil(totalStacksUnplaced / 27.0) + " Shlk" : totalStacksUncollected + " Stx");
 
             if (this.inventory == -1) { // Green when inventory is -1 (Typically when in creative)
                 return String.format("\u00a7a%s", strAmount);
-            } else if (need > 0) { // Red when there is not enough in the inventory
+            } else if (totalAmountNeeded > 0) { // Red when there is not enough in the inventory
                 return String.format("\u00a7c%s", strAmount);
-            } else if (invStx == needStx && this.inventory >= need) { // Green when there are exactly enough stacks and total items in the inventory
+            } else if (stacksInInventory == totalStacksUnplaced && this.inventory >= totalAmountNeeded) { // Green when there are exactly enough stacks and total items in the inventory
                 return String.format("\u00a7a%s", strAmount);
             } else { // Yellow when there are too many stacks in the inventory
-                return String.format("\u00a7e%s (%d Stx)", need, Math.abs(needInvStx) - invStx);
+                return String.format("\u00a7e%s", strAmount.replace("(", "(-")); // This sure is something
             }
         }
 

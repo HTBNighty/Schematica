@@ -135,7 +135,7 @@ public class ClientProxy extends CommonProxy {
                 position.z = ((int) Math.floor((player.posZ + 64) / 128) * 128 - 64);
 
                 // If there is a noobline, move the schematic up 1
-                if (schematic.getLength() == 129) {
+                if (schematic.getLength() % 128 == 1) {
                     position.z--;
                 }
             } else {

@@ -69,7 +69,7 @@ public class ConfigurationHandler {
     public static final boolean LOAD_ENABLED_DEFAULT = true;
     public static final int PLAYER_QUOTA_KILOBYTES_DEFAULT = 8192;
     public static final int INVENTORY_CALCULATOR_RANGE_DEFAULT = 5;
-    public static final boolean AUTO_ALIGN_DEFAULT = true;
+    public static final boolean AUTO_ALIGN_DEFAULT = false;
 
     public static boolean dumpBlockList = DUMP_BLOCK_LIST_DEFAULT;
     public static boolean showDebugInfo = SHOW_DEBUG_INFO_DEFAULT;

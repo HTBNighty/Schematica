@@ -245,6 +245,7 @@ public final class Names {
         public static final String PICK_BLOCK = "schematica.key.pickBlock";
         public static final String GET_INV = "schematica.key.inventoryCalculator";
         public static final String PREDICT_TOGGLE = "schematica.key.predictToggle";
+        public static final String MATERIAL_LIST = "schematica.key.materialList";
     }
 
     public static final class NBT {

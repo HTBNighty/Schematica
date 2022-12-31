@@ -1,6 +1,7 @@
 package com.github.lunatrius.schematica.handler.client;
 
 import com.github.lunatrius.schematica.client.gui.control.GuiSchematicControl;
+import com.github.lunatrius.schematica.client.gui.control.GuiSchematicMaterials;
 import com.github.lunatrius.schematica.client.gui.inventorycalc.GuiInventoryCalculator;
 import com.github.lunatrius.schematica.client.gui.load.GuiSchematicLoad;
 import com.github.lunatrius.schematica.client.gui.save.GuiSchematicSave;
@@ -42,6 +43,7 @@ public class InputHandler {
     private static final KeyBinding KEY_BINDING_PICK_BLOCK = new KeyBinding(Names.Keys.PICK_BLOCK, KeyConflictContext.IN_GAME, KeyModifier.SHIFT, -98, Names.Keys.CATEGORY);
     private static final KeyBinding KEY_BINDING_GET_INV = new KeyBinding(Names.Keys.GET_INV, Keyboard.KEY_NONE, Names.Keys.CATEGORY);
     private static final KeyBinding KEY_BINDING_PREDICT_TOGGLE = new KeyBinding(Names.Keys.PREDICT_TOGGLE, Keyboard.KEY_NONE, Names.Keys.CATEGORY);
+    private static final KeyBinding KEY_BINDING_MATERIAL_LIST = new KeyBinding(Names.Keys.MATERIAL_LIST, Keyboard.KEY_NONE, Names.Keys.CATEGORY);
 
     public static final KeyBinding[] KEY_BINDINGS = new KeyBinding[] {
             KEY_BINDING_LOAD,
@@ -55,7 +57,8 @@ public class InputHandler {
             KEY_BINDING_MOVE_HERE,
             KEY_BINDING_PICK_BLOCK,
             KEY_BINDING_GET_INV,
-            KEY_BINDING_PREDICT_TOGGLE
+            KEY_BINDING_PREDICT_TOGGLE,
+            KEY_BINDING_MATERIAL_LIST
     };
 
     private final Minecraft minecraft = Minecraft.getMinecraft();
@@ -141,6 +144,10 @@ public class InputHandler {
                     this.minecraft.player.sendMessage(new TextComponentTranslation(Names.Messages.TOGGLE_PREDICT, I18n.format(!ConfigurationHandler.predictPlace ? Names.Gui.ON : Names.Gui.OFF)));
                     ConfigurationHandler.loadConfiguration();
                 }
+            }
+
+            if (KEY_BINDING_MATERIAL_LIST.isPressed()) {
+                this.minecraft.displayGuiScreen(new GuiSchematicMaterials(this.minecraft.currentScreen));
             }
         }
     }

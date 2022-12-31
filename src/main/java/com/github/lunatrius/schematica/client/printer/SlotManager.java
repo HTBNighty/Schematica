@@ -27,8 +27,6 @@ public class SlotManager {
     /**
      * A list of ClickWindow packets that have been sent by this manager.
      * Used to track which packets should be removed when we receive a confirm transaction.
-     * This would probably be nicer as a queue or linked list, however it would be
-     * inefficient to to traverse those backwards, so this is an ArrayList.
      */
     List<CPacketClickWindow> transactionList = new ArrayList<>();
 
@@ -36,6 +34,7 @@ public class SlotManager {
      * Stores which slots in the hotbar the printer can currently use.
      * If a slot is false in this array it means that we are waiting for the confirm transaction from the server for that slot.
      */
+    // TODO: Update this to a list of times and periodically reset them to prevent hotbar lockout
     private boolean[] usableSlots = new boolean[]{true, true, true, true, true, true, true, true, true};
 
     /** Stores the inv slots that are currently pending so that printer does not try to move the same item multiple times */

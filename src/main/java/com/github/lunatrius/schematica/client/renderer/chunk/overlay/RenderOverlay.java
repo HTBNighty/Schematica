@@ -126,14 +126,9 @@ public class RenderOverlay extends RenderChunk {
                         boolean isInInventory = false;
                         if (!Minecraft.getMinecraft().player.isCreative()) {
                             for (ItemStack stack : Minecraft.getMinecraft().player.inventory.mainInventory) {
-                                if (stack.getItem() instanceof ItemBlock) {
-                                    // Figuring out this check was likely one of the most frustrating things.
-                                    Block stackBlock = ((ItemBlock) stack.getItem()).getBlock();
-                                    IBlockState stackstate = stackBlock.getStateFromMeta(stack.getMetadata());
-                                    if (schBlockState == stackstate) {
-                                        isInInventory = true;
-                                        break;
-                                    }
+                                if (stateMatchesStack(schBlockState, stack)) {
+                                    isInInventory = true;
+                                    break;
                                 }
                             }
                         } else {
@@ -270,5 +265,16 @@ public class RenderOverlay extends RenderChunk {
             // Else just use the default
             return new Color((int) Long.parseLong(def.replace("0x", ""), 16), true);
         }
+    }
+
+    public static boolean stateMatchesStack (IBlockState state, ItemStack stack) {
+        if (!(stack.getItem() instanceof ItemBlock)) {
+            return false;
+        }
+
+        ItemBlock item = (ItemBlock) stack.getItem();
+        Block block = state.getBlock();
+
+        return state.getBlock() == item.getBlock() && block.damageDropped(state) == item.getDamage(stack);
     }
 }

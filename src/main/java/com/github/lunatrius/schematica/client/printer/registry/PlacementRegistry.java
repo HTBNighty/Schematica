@@ -1,6 +1,7 @@
 package com.github.lunatrius.schematica.client.printer.registry;
 
 import com.github.lunatrius.schematica.block.state.BlockStateHelper;
+import com.github.lunatrius.schematica.client.printer.PlayerLookTracker;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockButton;
 import net.minecraft.block.BlockChest;
@@ -55,31 +56,31 @@ public class PlacementRegistry {
 
         final IValidPlayerFacing playerFacingEntity = (final IBlockState blockState, final EntityPlayer player, final BlockPos pos, final World world) -> {
             final EnumFacing facing = BlockStateHelper.<EnumFacing>getPropertyValue(blockState, "facing");
-            return facing == player.getHorizontalFacing();
+            return facing == PlayerLookTracker.INSTANCE.getHorizontalFacing();
         };
         final IValidPlayerFacing playerFacingEntityOpposite = (final IBlockState blockState, final EntityPlayer player, final BlockPos pos, final World world) -> {
             final EnumFacing facing = BlockStateHelper.<EnumFacing>getPropertyValue(blockState, "facing");
-            return facing == player.getHorizontalFacing().getOpposite();
+            return facing == PlayerLookTracker.INSTANCE.getHorizontalFacing().getOpposite();
         };
         final IValidPlayerFacing playerFacingPiston = (final IBlockState blockState, final EntityPlayer player, final BlockPos pos, final World world) -> {
             final EnumFacing facing = BlockStateHelper.<EnumFacing>getPropertyValue(blockState, "facing");
-            return facing == EnumFacing.getDirectionFromEntityLiving(pos, player);
+            return facing == PlayerLookTracker.INSTANCE.getDirectionFromEntityLiving(pos, player);
         };
         final IValidPlayerFacing playerFacingObserver = (final IBlockState blockState, final EntityPlayer player, final BlockPos pos, final World world) -> {
             final EnumFacing facing = BlockStateHelper.<EnumFacing>getPropertyValue(blockState, "facing");
-            return facing == EnumFacing.getDirectionFromEntityLiving(pos, player).getOpposite();
+            return facing == PlayerLookTracker.INSTANCE.getDirectionFromEntityLiving(pos, player).getOpposite();
         };
         final IValidPlayerFacing playerFacingRotateY = (final IBlockState blockState, final EntityPlayer player, final BlockPos pos, final World world) -> {
             final EnumFacing facing = BlockStateHelper.<EnumFacing>getPropertyValue(blockState, "facing");
-            return facing == player.getHorizontalFacing().rotateY();
+            return facing == PlayerLookTracker.INSTANCE.getHorizontalFacing().rotateY();
         };
         final IValidPlayerFacing playerFacingLever = (final IBlockState blockState, final EntityPlayer player, final BlockPos pos, final World world) -> {
             final BlockLever.EnumOrientation value = blockState.getValue(BlockLever.FACING);
-            return !value.getFacing().getAxis().isVertical() || BlockLever.EnumOrientation.forFacings(value.getFacing(), player.getHorizontalFacing()) == value;
+            return !value.getFacing().getAxis().isVertical() || BlockLever.EnumOrientation.forFacings(value.getFacing(), PlayerLookTracker.INSTANCE.getHorizontalFacing()) == value;
         };
         final IValidPlayerFacing playerFacingStandingSign = (final IBlockState blockState, final EntityPlayer player, final BlockPos pos, final World world) -> {
             final int value = blockState.getValue(BlockStandingSign.ROTATION);
-            final int facing = MathHelper.floor((player.rotationYaw + 180.0) * 16.0 / 360.0 + 0.5) & 15;
+            final int facing = MathHelper.floor((PlayerLookTracker.INSTANCE.rotationYaw + 180.0) * 16.0 / 360.0 + 0.5) & 15;
             return value == facing;
         };
         final IValidPlayerFacing playerFacingIgnore = (final IBlockState blockState, final EntityPlayer player, final BlockPos pos, final World world) -> {

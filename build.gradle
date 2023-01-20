@@ -57,7 +57,7 @@ minecraft {
             workingDirectory project.file('run')
 
             property 'fml.coreMods.load', 'com.github.lunatrius.schematica.mixin.MixinLoader'
-            property 'mixin.env.disableRefMap', 'true' // Disable refmap so we don't get trolled by Baritone
+            property 'mixin.env.disableRefMap', 'true'
 
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
             property 'forge.logging.console.level', 'debug'

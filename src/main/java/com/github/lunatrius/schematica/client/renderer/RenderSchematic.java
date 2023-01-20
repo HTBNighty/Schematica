@@ -263,9 +263,11 @@ public class RenderSchematic extends RenderGlobal {
 
     @SubscribeEvent
     public void onPlayerDestroyItem (final PlayerDestroyItemEvent event) {
-        for (ContainerLocalRenderInformation renderInformation : this.renderInfos) {
-            if (!this.renderDispatcherOverlay.updateChunkLater(renderInformation.renderOverlay)) {
-                break;
+        if (ClientProxy.schematic.isRendering) {
+            for (ContainerLocalRenderInformation renderInformation : this.renderInfos) {
+                if (!this.renderDispatcherOverlay.updateChunkLater(renderInformation.renderOverlay)) {
+                    break;
+                }
             }
         }
     }

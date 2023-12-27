@@ -8,6 +8,7 @@ public final class Names {
             public static final String RENDER = "render";
             public static final String PRINTER = "printer";
             public static final String PRINTER_SWAPSLOTS = "printer.swapslots";
+            public static final String NUKER = "nuker";
             public static final String GENERAL = "general";
             public static final String SERVER = "server";
         }
@@ -74,6 +75,17 @@ public final class Names {
         public static final String LIQUID_PLACE_DESC = "Attempts to place blocks on top of liquid. Disabled in single player, only works on some servers. Might get you banned also.";
         public static final String SWAP_SLOT = "swapSlot";
         public static final String SWAP_SLOT_DESC = "Allow the printer to use this hotbar slot.";
+
+        public static final String NUKER_RANGE = "nukerRange";
+        public static final String NUKER_RANGE_DESC = "How far nuker will mine.";
+        public static final String NUKER_TIMEOUT = "nukerTimeout";
+        public static final String NUKER_TIMEOUT_DESC = "How long to wait (in ms) until trying to break a specific block again.";
+        public static final String NUKER_FLATTEN = "nukerFlatten";
+        public static final String NUKER_FLATTEN_DESC = "If nuker should mine below your feet.";
+        public static final String NUKER_MINE_SPEED = "nukerMineSpeed";
+        public static final String NUKER_MINE_SPEED_DESC = "How fast you should be able to mine a block for nuker to attempt to mine it (0-1, 0 for unminable, 1 for instant mine).";
+        public static final String NUKER_MODE = "nukerMode";
+        public static final String NUKER_MODE_DESC = "If nuker should try to mine a block depending on the type of block in the schematic.";
 
         public static final String SCHEMATIC_DIRECTORY = "schematicDirectory";
         public static final String SCHEMATIC_DIRECTORY_DESC = "Schematic directory.";
@@ -168,6 +180,7 @@ public final class Names {
     public static final class Messages {
         public static final String TOGGLE_PRINTER = "schematica.message.togglePrinter";
         public static final String TOGGLE_PREDICT = "schematica.message.togglePredict";
+        public static final String TOGGLE_NUKER = "schematica.message.toggleNuker"; // TODO
 
         public static final String INVALID_BLOCK = "schematica.message.invalidBlock";
         public static final String INVALID_PROPERTY = "schematica.message.invalidProperty";
@@ -241,6 +254,7 @@ public final class Names {
         public static final String LAYER_TOGGLE = "schematica.key.layerToggle";
         public static final String RENDER_TOGGLE = "schematica.key.renderToggle";
         public static final String PRINTER_TOGGLE = "schematica.key.printerToggle";
+        public static final String NUKER_TOGGLE = "schematica.key.nukerToggle"; // TODO
         public static final String MOVE_HERE = "schematica.key.moveHere";
         public static final String PICK_BLOCK = "schematica.key.pickBlock";
         public static final String GET_INV = "schematica.key.inventoryCalculator";

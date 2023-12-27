@@ -60,6 +60,11 @@ public class ConfigurationHandler {
     public static final boolean[] SWAP_SLOTS_DEFAULT = new boolean[] {
             false, false, false, false, false, true, true, true, true
     };
+    public static final float NUKER_RANGE_DEFAULT = 5.0f;
+    public static final int NUKER_TIMEOUT_DEFAULT = 1000;
+    public static final boolean NUKER_FLATTEN_DEFAULT = false;
+    public static final float NUKER_MINE_SPEED_DEFAULT = 0.2f;
+    public static final String NUKER_MODE_DEFAULT = NukerMode.BLOCKS.name();
     public static final String SCHEMATIC_DIRECTORY_STR = "./schematics";
     public static final File SCHEMATIC_DIRECTORY_DEFAULT = new File(Schematica.proxy.getDataDirectory(), SCHEMATIC_DIRECTORY_STR);
     public static final String[] EXTRA_AIR_BLOCKS_DEFAULT = {};
@@ -102,6 +107,18 @@ public class ConfigurationHandler {
     public static boolean liquidPlace = LIQUID_PLACE_DEFAULT;
     public static boolean[] swapSlots = Arrays.copyOf(SWAP_SLOTS_DEFAULT, SWAP_SLOTS_DEFAULT.length);
     public static final Queue<Integer> swapSlotsQueue = new ArrayDeque<Integer>();
+    public static float nukerRange = NUKER_RANGE_DEFAULT;
+    public static int nukerTimeout = NUKER_TIMEOUT_DEFAULT;
+    public static boolean nukerFlatten = NUKER_FLATTEN_DEFAULT;
+    public static float nukerMineSpeed = NUKER_MINE_SPEED_DEFAULT;
+    public static String nukerMode = NUKER_MODE_DEFAULT;
+
+    public enum NukerMode {
+        BLOCKS, AIR, BOTH;
+    }
+
+    public static String[] nukerModeValues = {NukerMode.BLOCKS.name(), NukerMode.AIR.name(), NukerMode.BOTH.name()};
+    public static String[] nukerModeValuesDisplay = nukerModeValues; // TODO
     public static File schematicDirectory = SCHEMATIC_DIRECTORY_DEFAULT;
     public static String[] extraAirBlocks = Arrays.copyOf(EXTRA_AIR_BLOCKS_DEFAULT, EXTRA_AIR_BLOCKS_DEFAULT.length);
     public static String sortType = SORT_TYPE_DEFAULT;
@@ -142,6 +159,11 @@ public class ConfigurationHandler {
     public static Property propPredictPlace = null;
     public static Property propLiquidPlace = null;
     public static Property[] propSwapSlots = new Property[SWAP_SLOTS_DEFAULT.length];
+    public static Property propNukerRange = null;
+    public static Property propNukerTimeout = null;
+    public static Property propNukerFlatten = null;
+    public static Property propNukerMineSpeed = null;
+    public static Property propNukerMode = null;
     public static Property propSchematicDirectory = null;
     public static Property propExtraAirBlocks = null;
     public static Property propSortType = null;
@@ -297,6 +319,36 @@ public class ConfigurationHandler {
         propLiquidPlace = configuration.get(Names.Config.Category.PRINTER, Names.Config.LIQUID_PLACE, LIQUID_PLACE_DEFAULT, Names.Config.LIQUID_PLACE_DESC);
         propLiquidPlace.setLanguageKey(Names.Config.LANG_PREFIX + "." + Names.Config.LIQUID_PLACE);
         liquidPlace = propLiquidPlace.getBoolean();
+    }
+
+    private static void loadConfigurationNuker () {
+        /*
+        public Option<Float> range = new Option<Float>("Range", "How far nuker will mine", ConstructorUtil.getArrayList("r"), 0.0f, 6.0f, 5.0f);
+        public Option<Integer> timeout = new Option<Integer>("Timeout", "How long to wait (in ms) until trying to break a specific block again", ConstructorUtil.getArrayList("TO", "t"), 0, 1000);
+        public Option<Boolean> flatten = new Option<Boolean>("Flatten", "If nuker should mine below your feet", ConstructorUtil.getArrayList("f", "Fl"), true);
+        public Option<Float> minMineSpeed = new Option<Float>("MinMineSpeed", "How fast you should be able to mine a block for nuker to attempt to mine it (0-1, 0 for unminable, 1 for instant mine)", ConstructorUtil.getArrayList("Min", "Speed", "MineSpeed"), 0f, 1.0f, 0.2f);
+        MineAir or MineBlocks
+        */
+
+        propNukerRange = configuration.get(Names.Config.Category.NUKER, Names.Config.NUKER_RANGE, NUKER_RANGE_DEFAULT, Names.Config.NUKER_RANGE_DESC);
+        propNukerRange.setLanguageKey(Names.Config.LANG_PREFIX + "." + Names.Config.NUKER_RANGE);
+        nukerRange = (float) propNukerRange.getDouble(NUKER_RANGE_DEFAULT);
+
+        propNukerTimeout = configuration.get(Names.Config.Category.NUKER, Names.Config.NUKER_TIMEOUT, NUKER_TIMEOUT_DEFAULT, Names.Config.NUKER_TIMEOUT_DESC);
+        propNukerTimeout.setLanguageKey(Names.Config.LANG_PREFIX + "." + Names.Config.NUKER_TIMEOUT);
+        nukerTimeout = propNukerTimeout.getInt(NUKER_TIMEOUT_DEFAULT);
+
+        propNukerFlatten = configuration.get(Names.Config.Category.NUKER, Names.Config.NUKER_FLATTEN, NUKER_RANGE_DEFAULT, Names.Config.NUKER_FLATTEN_DESC);
+        propNukerFlatten.setLanguageKey(Names.Config.LANG_PREFIX + "." + Names.Config.NUKER_FLATTEN);
+        nukerFlatten = propNukerFlatten.getBoolean(NUKER_FLATTEN_DEFAULT);
+
+        propNukerMineSpeed = configuration.get(Names.Config.Category.NUKER, Names.Config.NUKER_MINE_SPEED, NUKER_RANGE_DEFAULT, Names.Config.NUKER_MINE_SPEED_DESC);
+        propNukerMineSpeed.setLanguageKey(Names.Config.LANG_PREFIX + "." + Names.Config.NUKER_MINE_SPEED);
+        nukerMineSpeed = (float) propNukerMineSpeed.getDouble(NUKER_MINE_SPEED_DEFAULT);
+
+        propNukerMode = configuration.get(Names.Config.Category.NUKER, Names.Config.NUKER_MODE, NUKER_MODE_DEFAULT, Names.Config.NUKER_MODE_DESC, nukerModeValues, nukerModeValuesDisplay); // TODO: Make this work with locales
+        propNukerMode.setLanguageKey(Names.Config.LANG_PREFIX + "." + Names.Config.NUKER_MODE);
+        nukerMode = propNukerMode.getString();
     }
 
     private static void loadConfigurationSwapSlots() {

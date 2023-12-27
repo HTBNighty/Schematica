@@ -142,6 +142,18 @@ schematica.config.swapSlot7.tooltip=Allow the printer to use the hotbar slot 8.
 schematica.config.swapSlot8=Allow Slot 9
 schematica.config.swapSlot8.tooltip=Allow the printer to use the hotbar slot 9.
 
+# gui - config - nuker
+schematica.config.nukerRange="Range";
+schematica.config.nukerRange.tooltip="How far nuker will mine.";
+schematica.config.nukerTimeout="Timeout";
+schematica.config.nukerTimeout.tooltip="How long to wait (in ms) until trying to break a specific block again.";
+schematica.config.nukerFlatten="Flatten";
+schematica.config.nukerFlatten.tooltip="If nuker should mine below your feet.";
+schematica.config.nukerMineSpeed="Min Mine Speed";
+schematica.config.nukerMineSpeed.tooltip="How fast you should be able to mine a block for nuker to attempt to mine it (0-1, 0 for unminable, 1 for instant mine).";
+schematica.config.nukerMode="Mode";
+schematica.config.nukerMode.tooltip="If nuker should try to mine a block depending on the type of block in the schematic.";
+
 # gui - config - general
 schematica.config.schematicDirectory=Schematic Directory
 schematica.config.schematicDirectory.tooltip=Schematic directory.

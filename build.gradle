@@ -88,10 +88,10 @@ processResources {
 }
 
 repositories {
-    ivy {
-        name = 'lunatrius\' ivy repo'
-        url 'http://mc.lunatri.us/files'
-    }
+//    ivy {
+//        name = 'lunatrius\' ivy repo'
+//        url 'http://mc.lunatri.us/files'
+//    }
     maven {
         name = 'spongepowered-repo'
         url = 'https://repo.spongepowered.org/repository/maven-public/'
@@ -101,6 +101,7 @@ repositories {
 dependencies {
     minecraft "net.minecraftforge:forge:1.12.2-14.23.5.2854"
 
+//    implementation files('LunatriusCore-1.12.2-1.2.0.42-universal.jar')
     implementation fg.deobf(group: group, name: 'LunatriusCore', version: "${project.mcversion}-${project.version_lunatriuscore}", classifier: 'universal')
 
     implementation ('org.spongepowered:mixin:0.7.11-SNAPSHOT') {

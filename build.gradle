@@ -101,8 +101,7 @@ repositories {
 dependencies {
     minecraft "net.minecraftforge:forge:1.12.2-14.23.5.2854"
 
-//    implementation files('LunatriusCore-1.12.2-1.2.0.42-universal.jar')
-    implementation fg.deobf(group: group, name: 'LunatriusCore', version: "${project.mcversion}-${project.version_lunatriuscore}", classifier: 'universal')
+//    implementation fg.deobf(group: group, name: 'LunatriusCore', version: "${project.mcversion}-${project.version_lunatriuscore}", classifier: 'universal')
 
     implementation ('org.spongepowered:mixin:0.7.11-SNAPSHOT') {
         exclude module: 'commons-io'

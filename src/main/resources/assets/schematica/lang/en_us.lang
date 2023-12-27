@@ -182,6 +182,7 @@ schematica.key.layerDec=Previous Layer
 schematica.key.layerToggle=Toggle All/Layer Mode
 schematica.key.renderToggle=Toggle Rendering
 schematica.key.printerToggle=Toggle Printer
+schematica.key.nukerToggle=Toggle Nuker
 schematica.key.moveHere=Move here
 schematica.key.pickBlock=Pick Block
 schematica.key.inventoryCalculator=Inventory Calc

@@ -180,7 +180,7 @@ public final class Names {
     public static final class Messages {
         public static final String TOGGLE_PRINTER = "schematica.message.togglePrinter";
         public static final String TOGGLE_PREDICT = "schematica.message.togglePredict";
-        public static final String TOGGLE_NUKER = "schematica.message.toggleNuker"; // TODO
+        public static final String TOGGLE_NUKER = "schematica.message.toggleNuker";
 
         public static final String INVALID_BLOCK = "schematica.message.invalidBlock";
         public static final String INVALID_PROPERTY = "schematica.message.invalidProperty";
@@ -254,7 +254,7 @@ public final class Names {
         public static final String LAYER_TOGGLE = "schematica.key.layerToggle";
         public static final String RENDER_TOGGLE = "schematica.key.renderToggle";
         public static final String PRINTER_TOGGLE = "schematica.key.printerToggle";
-        public static final String NUKER_TOGGLE = "schematica.key.nukerToggle"; // TODO
+        public static final String NUKER_TOGGLE = "schematica.key.nukerToggle";
         public static final String MOVE_HERE = "schematica.key.moveHere";
         public static final String PICK_BLOCK = "schematica.key.pickBlock";
         public static final String GET_INV = "schematica.key.inventoryCalculator";

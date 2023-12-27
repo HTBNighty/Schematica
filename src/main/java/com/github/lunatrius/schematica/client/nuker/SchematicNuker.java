@@ -29,6 +29,10 @@ public class SchematicNuker {
     private static Map<BlockPos, Long> attemptedBreaks = new HashMap<>();
 
     public static void doNuker () {
+        if (!isNuking) {
+            return;
+        }
+
         SchematicWorld schem = ClientProxy.schematic;
         if (schem == null) {
             return;

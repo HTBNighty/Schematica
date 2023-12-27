@@ -188,6 +188,7 @@ public class ConfigurationHandler {
         loadConfigurationRender();
         loadConfigurationPrinter();
         loadConfigurationSwapSlots();
+        loadConfigurationNuker();
         loadConfigurationGeneral();
         loadConfigurationServer();
 
@@ -322,14 +323,6 @@ public class ConfigurationHandler {
     }
 
     private static void loadConfigurationNuker () {
-        /*
-        public Option<Float> range = new Option<Float>("Range", "How far nuker will mine", ConstructorUtil.getArrayList("r"), 0.0f, 6.0f, 5.0f);
-        public Option<Integer> timeout = new Option<Integer>("Timeout", "How long to wait (in ms) until trying to break a specific block again", ConstructorUtil.getArrayList("TO", "t"), 0, 1000);
-        public Option<Boolean> flatten = new Option<Boolean>("Flatten", "If nuker should mine below your feet", ConstructorUtil.getArrayList("f", "Fl"), true);
-        public Option<Float> minMineSpeed = new Option<Float>("MinMineSpeed", "How fast you should be able to mine a block for nuker to attempt to mine it (0-1, 0 for unminable, 1 for instant mine)", ConstructorUtil.getArrayList("Min", "Speed", "MineSpeed"), 0f, 1.0f, 0.2f);
-        MineAir or MineBlocks
-        */
-
         propNukerRange = configuration.get(Names.Config.Category.NUKER, Names.Config.NUKER_RANGE, NUKER_RANGE_DEFAULT, Names.Config.NUKER_RANGE_DESC);
         propNukerRange.setLanguageKey(Names.Config.LANG_PREFIX + "." + Names.Config.NUKER_RANGE);
         nukerRange = (float) propNukerRange.getDouble(NUKER_RANGE_DEFAULT);
@@ -338,11 +331,11 @@ public class ConfigurationHandler {
         propNukerTimeout.setLanguageKey(Names.Config.LANG_PREFIX + "." + Names.Config.NUKER_TIMEOUT);
         nukerTimeout = propNukerTimeout.getInt(NUKER_TIMEOUT_DEFAULT);
 
-        propNukerFlatten = configuration.get(Names.Config.Category.NUKER, Names.Config.NUKER_FLATTEN, NUKER_RANGE_DEFAULT, Names.Config.NUKER_FLATTEN_DESC);
+        propNukerFlatten = configuration.get(Names.Config.Category.NUKER, Names.Config.NUKER_FLATTEN, NUKER_FLATTEN_DEFAULT, Names.Config.NUKER_FLATTEN_DESC);
         propNukerFlatten.setLanguageKey(Names.Config.LANG_PREFIX + "." + Names.Config.NUKER_FLATTEN);
         nukerFlatten = propNukerFlatten.getBoolean(NUKER_FLATTEN_DEFAULT);
 
-        propNukerMineSpeed = configuration.get(Names.Config.Category.NUKER, Names.Config.NUKER_MINE_SPEED, NUKER_RANGE_DEFAULT, Names.Config.NUKER_MINE_SPEED_DESC);
+        propNukerMineSpeed = configuration.get(Names.Config.Category.NUKER, Names.Config.NUKER_MINE_SPEED, NUKER_MINE_SPEED_DEFAULT, Names.Config.NUKER_MINE_SPEED_DESC);
         propNukerMineSpeed.setLanguageKey(Names.Config.LANG_PREFIX + "." + Names.Config.NUKER_MINE_SPEED);
         nukerMineSpeed = (float) propNukerMineSpeed.getDouble(NUKER_MINE_SPEED_DEFAULT);
 

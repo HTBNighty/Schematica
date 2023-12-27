@@ -56,6 +56,7 @@ public class InputHandler {
             KEY_BINDING_LAYER_TOGGLE,
             KEY_BINDING_RENDER_TOGGLE,
             KEY_BINDING_PRINTER_TOGGLE,
+            KEY_BINDING_NUKER_TOGGLE,
             KEY_BINDING_MOVE_HERE,
             KEY_BINDING_PICK_BLOCK,
             KEY_BINDING_GET_INV,

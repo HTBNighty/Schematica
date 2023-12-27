@@ -77,8 +77,8 @@ processResources {
                 'version'        : modversion,
                 'mcversion'      : project.mcversion,
                 'forgeversion'   : project.version_forge,
-                'minforgeversion': project.hasProperty('version_minforge') ? project.version_minforge : project.version_forge,
-                'coreversion'    : project.version_lunatriuscore
+                'minforgeversion': project.hasProperty('version_minforge') ? project.version_minforge : project.version_forge
+//                'coreversion'    : project.version_lunatriuscore
         ])
     }
 

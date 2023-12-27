@@ -2,7 +2,6 @@ package com.github.lunatrius.schematica.client.nuker;
 
 import static com.github.lunatrius.schematica.handler.ConfigurationHandler.*;
 
-import com.github.lunatrius.schematica.api.ISchematic;
 import com.github.lunatrius.schematica.client.world.SchematicWorld;
 import com.github.lunatrius.schematica.handler.ConfigurationHandler;
 import com.github.lunatrius.schematica.proxy.ClientProxy;
@@ -45,6 +44,9 @@ public class SchematicNuker {
                     (int) player.posY + nukerRange,
                     (int) player.posZ + nukerRange);
 
+        // TODO: Is it whl or lhw?
+        bb = bb.intersect(new AxisAlignedBB(schem.position, schem.position.add(schem.getWidth(), schem.getHeight(), schem.getLength())));
+
         List<BlockPos> blocks = getClosestBlocksInBox(bb, nukerRange);
 
         for (BlockPos pos : blocks) {
@@ -81,15 +83,15 @@ public class SchematicNuker {
 
     private static boolean shouldNuke (BlockPos pos) {
         SchematicWorld schem = ClientProxy.schematic;
-        if (schem == null) {
-            return false;
-        }
-
-        if (!schem.isInside(pos)) {
-            return false;
-        }
 
         IBlockState schemState = schem.getBlockState(pos.add(-schem.position.x, -schem.position.y, -schem.position.z));
+        IBlockState mcState = mc.world.getBlockState(pos);
+
+        // TODO: Add an option to allow players to keep blocks of the same Block but different State
+        if (schemState == mcState) {
+            return false;
+        }
+
         if (nukerMode.equals(NukerMode.BLOCKS.name())) {
             return !isSchemAirBlock(schemState);
         } else if (nukerMode.equals(NukerMode.AIR.name())) {

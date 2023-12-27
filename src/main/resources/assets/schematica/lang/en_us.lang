@@ -227,6 +227,7 @@ schematica.command.replace.success=Replaced %s blocks.
 
 # messages
 schematica.message.togglePrinter=Printer: %s
+schematica.message.toggleNuker=Nuker: %s
 schematica.message.togglePredict=Predict Place: %s
 schematica.message.invalidBlock="%s" does not exist.
 schematica.message.invalidProperty="%s" is not a valid property.

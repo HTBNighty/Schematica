@@ -135,8 +135,7 @@ public class SchematicPrinter {
 
         syncSneaking(player, true);
 
-        final double blockReachDistance = this.minecraft.playerController.getBlockReachDistance() - 0.1;
-        final double blockReachDistanceSq = blockReachDistance * blockReachDistance;
+        final double rangeSq = ConfigurationHandler.placeDistance * ConfigurationHandler.placeDistance;
 
         List<MBlockPos> blocks = new ArrayList<>();
         for (BlockPos pos : BlockPos.getAllInBox(minX, minY, minZ, maxX, maxY, maxZ)) {
@@ -153,7 +152,7 @@ public class SchematicPrinter {
         blocks.sort(Comparator.comparingDouble(o -> o.distanceSqToCenter(dX, dY, dZ)));
 
         for (MBlockPos pos : blocks)  {
-            if (pos.distanceSqToCenter(dX, dY, dZ) > blockReachDistanceSq || !ConfigurationHandler.printNoobline && !(pos.getZ() >= 1) ) {
+            if (pos.distanceSqToCenter(dX, dY, dZ) > rangeSq || !ConfigurationHandler.printNoobline && !(pos.getZ() >= 1) ) {
                 continue;
             }
 
@@ -336,7 +335,20 @@ public class SchematicPrinter {
             offsetZ = data.getOffsetZ(blockState);
             extraClicks = data.getExtraClicks(blockState);
         } else {
-            direction = solidSides.get(0);
+            EnumFacing closestSide = null;
+            double closestDist = Double.POSITIVE_INFINITY;
+            for (EnumFacing face : solidSides) {
+                BlockPos offset = pos.offset(face);
+                Vec3d faceCenter = new Vec3d((pos.getX() + offset.getX()) / 2.0d, (pos.getY() + offset.getY()) / 2.0d, (pos.getZ() + offset.getZ()) / 2.0d);
+
+                double distance = faceCenter.squareDistanceTo(player.getPositionEyes(minecraft.getRenderPartialTicks()));
+                if (distance < closestDist) {
+                    closestDist = distance;
+                    closestSide = face;
+                }
+            }
+
+            direction = closestSide;
             offsetX = 0.5f;
             offsetY = 0.5f;
             offsetZ = 0.5f;
